@@ -1,9 +1,9 @@
-# README #
+# AtomBlend #
 
-CVL Blender atom probe visualisation development repository
+A Blender atom probe visualisation addon for CVL.
 
-### Set up ###
+### Setup ###
 
-* Clone repo in your local Blender addons directory
+* Clone AtomBlend in your local Blender addons directory
 * Activate addon in Blender User Preferences
-* AtomBlend will show up in View3D toolbar
+* AtomBlend will show up as a tab in the View3D toolbar
