@@ -1,6 +1,6 @@
 # AtomBlend #
 
-A Blender atom probe visualisation addon for CVL.
+A Blender atom probe visualisation addon for [CVL](https://www.nectar.org.au/characterisation-virtual-laboratory).
 
 ### Setup ###
 
