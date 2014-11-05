@@ -193,6 +193,15 @@ class VIEW3D_PT_data_animation(AtomBlendPanel, Panel):
         col = layout.column(align=True)
         col.operator("atomblend.animation_add")
 
+class VIEW3D_PT_data_analysis(AtomBlendPanel, Panel):
+    """Analysis operators and settings"""
+    bl_label = "Analysis"
+
+    def draw(self, context):
+        layout = self.layout
+        col = layout.column(align=True)
+        col.operator("atomblend.analysis_isosurf")
+
 
 
 # === Helper functions ===

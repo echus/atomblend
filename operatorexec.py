@@ -16,13 +16,32 @@ import numpy as np
 
 from .aptread import APTloader
 from . import blend
+from . import analysis
 
 # === Operator execute functions ===
+def analysis_isosurface_gen(self, context):
+    """Perform isosurface analysis on current dataset"""
+    # Get POS xyz data
+    props = context.scene.pos_panel_props
+    # FIXME don't load this again!!! save as global var for now?
+    data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
+
+    # Get user specified isorange
+    # TODO
+    isorange = [2, 6]
+
+    # Calculate isosurface
+    print("Calculating isosurface ...")
+    verts, faces = analysis.isosurface.generate(data.xyz, isorange)
+    print("Calculating isosurface ... done!")
+
+    print(verts[0:50])
+    print(faces[0:50])
+
+    return {'FINISHED'}
+
 def animation_add(self, context):
     """Add animation to selected object"""
-    # Get active object
-    obj = context.object
-
     # Get POS xyz data
     props = context.scene.pos_panel_props
     # FIXME don't load this again!!! save as global var for now?

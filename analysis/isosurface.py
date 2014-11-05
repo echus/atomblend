@@ -27,6 +27,28 @@ import numpy as np
 #    array of vertices and faces
 ###
 
+def generate(pointcloud, isorange):
+    """
+    Generate isosurface from given pointcloud and isorange
+    Returns: verts/faces representation of isosurface
+    """
+
+    # Retrieve the 3D Voxel Volume from 'voxelise'
+    voxelvolume = voxelise(pointcloud)
+
+    # Return list of length-3 lists. Each sublist contains three tuples:
+    # (x,y,z) coords for all triangle vertices, including repeats.
+    raw_faces = march(voxelvolume, isorange)
+
+    # Finds and collects unique vertices, storing as indices. Returns
+    # a true mesh with no degenerate faces
+    verts, faces = uniqueverts(raw_faces)
+
+    #vertices, triangles = get_Lists(voxelvolume, isorange)
+    #triangles = get_Lists(voxelvolume, isorange)[1] +1 #add 1 to index for read as .obj
+
+    return verts, faces #as array or as reference to where file is saved?
+
 def voxelise(coords, bin=1):
     """
     Voxelise the data in XYZ and return the volume in each voxel
@@ -978,21 +1000,5 @@ def uniqueverts(tri_list):
 
     return vert_list, face_list
 
-def isosurface(pointcloud, isorange):
-    """Return verts/faces array for isosurface from pointcloud and isorange"""
 
-    # Retrieve the 3D Voxel Volume from 'voxelise'
-    voxelvolume = voxelise(pointcloud)
 
-    # Return list of length-3 lists. Each sublist contains three tuples:
-    # (x,y,z) coords for all triangle vertices, including repeats.
-    raw_faces = march(voxelvolume, isorange)
-
-    # Finds and collects unique vertices, storing as indices. Returns
-    # a true mesh with no degenerate faces
-    verts, faces = uniqueverts(raw_faces)
-
-    #vertices, triangles = get_Lists(voxelvolume, isorange)
-    #triangles = get_Lists(voxelvolume, isorange)[1] +1 #add 1 to index for read as .obj
-
-    return verts, faces #as array or as reference to where file is saved?

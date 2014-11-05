@@ -286,3 +286,11 @@ class VIEW3D_OT_animation_add(Operator):
 
     def execute(self, context):
         return opexec.animation_add(self, context)
+
+class VIEW3D_OT_analysis_isosurface(Operator):
+    """Calculate the isosurface of the imported dataset"""
+    bl_idname = "atomblend.analysis_isosurf"
+    bl_label = "Generate isosurface"
+
+    def execute(self, context):
+        return opexec.analysis_isosurface_gen(self, context)
