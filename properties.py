@@ -62,13 +62,13 @@ class VIEW3D_PT_pos_panel_props(PropertyGroup):
     pos_filename = StringProperty(\
             name = "",
             description = "Input .pos file",
-            default = "/Users/varvara/Library/Application Support/Blender/2.70/scripts/addons/AtomBlend/aptread/R04.pos"
+            default = "/"
         )
 
     rng_filename = StringProperty(\
             name = "",
             description = "Input .rng file",
-            default = "/Users/varvara/Library/Application Support/Blender/2.70/scripts/addons/AtomBlend/aptread/R04.rng"
+            default = "/"
         )
 
     plot_options = [('EA', "Atomic", "Atomic"), ('ION', "Ionic", "Ionic"), ('ISO', "Isotopic", "Isotopic")]
