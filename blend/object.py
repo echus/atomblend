@@ -80,6 +80,12 @@ def pointcloud_add(verts, name, trunc=None):
     obj = bpy.data.objects.new(name, mesh)
     return link_and_update(obj)
 
+def object_add_from_pydata(name, verts, edges, faces):
+    """Create object from vert, edge and face defs"""
+    mesh = mesh_add_from_pydata(name+"_mesh", verts, edges, faces)
+    obj = bpy.data.objects.new(name, mesh)
+    return link_and_update(obj)
+
 # === Mesh creation ===
 def mesh_add_from_pydata(name, verts, edges, faces):
     """Create mesh from vert, edge and face definitions"""
