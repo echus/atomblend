@@ -1,18 +1,31 @@
+# =============================================================================
+# (C) Copyright 2014
+# Australian Centre for Microscopy & Microanalysis
+# The University of Sydney
+# =============================================================================
+# File:   analysis/header.py
+# Date:   2014-11-05
+# Author: Clara Tan
+#
+# Description:
+# Functions to generate isosurfaces
+# =============================================================================
+
 import numpy as np
 
-"""
-TO RUN: isosurface(pointcloud, isorange)
-
-Inputs:
-    'pointcloud' = np.array([[x1, y1, z1], [x2, y2, z2], ...]) where each row is
-    the xyz coordinate of each point of the pointcloud (float)
-
-    'isorange' = np.array([LB, UB]) where LB, UB are lower and upper bounds of the
-    user-entered isovalues (float)
-
-Outputs:
-    CLARIFY - .obj file or just array of vertices and faces?
-"""
+###
+# TO RUN: isosurface(pointcloud, isorange)
+#
+# Inputs:
+#    'pointcloud' = np.array([[x1, y1, z1], [x2, y2, z2], ...]) where each row is
+#    the xyz coordinate of each point of the pointcloud (float)
+#
+#    'isorange' = np.array([LB, UB]) where LB, UB are lower and upper bounds of the
+#    user-entered isovalues (float)
+#
+# Outputs:
+#    array of vertices and faces
+###
 
 def voxelise(coords, bin=1):
     """
@@ -67,12 +80,19 @@ def voxelise(coords, bin=1):
     return threedee
 
 def get_frac(from_value, to_value, isorange):
+    """Used to calculate edge intercept coordinate"""
+
     if (to_value == from_value):
         return 0
-    if from_value <= isorange[0]: #if less than or equal to min isovalue
+    if from_value <= isorange[0]: # if less than or equal to min isovalue
         return ((isorange[0] - from_value)/(to_value - from_value))
-    elif from_value < isorange[1]: #if less than max isovalue but over min isovalue
+    elif from_value < isorange[1]: # if less than max isovalue but over min isovalue
         return ((isorange[1] - from_value)/(to_value - from_value))
+    else:
+        return 0
+
+    # TODO what should happen if this gets called with values outside isorange?
+
     ### NOTE at the moment this returns 'NONE' for values outside the isorange.
     # ie when from value is greater than max isovalue
     # or when to value is less than min isovalue
@@ -807,19 +827,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
                      e11, e12)
         append_tris(face_list, 3, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-
     return
 
 def march(voxelvolume, isorange):
-
-    #Checks
-    if voxelvolume.ndim != 3:
-        raise ValueError("A 3D matrix required as input.")
-    if voxelvolume.shape[0] < 2 or voxelvolume.shape[1] < 2 or voxelvolume.shape[2] < 2:
-        raise ValueError("The 3D matrix must contain 2 or more voxels.")
-    if isorange[0] < voxelvolume.min() or isorange[1] > voxelvolume.max()+1:
-        raise ValueError("Isovalue range is outside values of the data set.")
-
     """
     ISOSURFACES via the MARCHING CUBES ALGORITHM
     Original paper by W.E.Lorensen & H.E. Cline, 1987.
@@ -848,57 +858,61 @@ def march(voxelvolume, isorange):
 
     """
 
-    #Place the first marching cube so v1 is at the bottom left of Voxel Volume [0, 0, 0]
+    # Checks
+    if voxelvolume.ndim != 3:
+        raise ValueError("A 3D matrix required as input.")
+    if voxelvolume.shape[0] < 2 or voxelvolume.shape[1] < 2 or voxelvolume.shape[2] < 2:
+        raise ValueError("The 3D matrix must contain 2 or more voxels.")
+    if isorange[0] < voxelvolume.min() or isorange[1] > voxelvolume.max()+1:
+        raise ValueError("Isovalue range is outside values of the data set.")
+
+    # Place the first marching cube so v1 is at the bottom left of Voxel Volume [0, 0, 0]
     currentcoord = np.array([0, 0, 0]) #x, y, z
 
-    #Calculate no of iterations needed
+    # Calculate no of iterations needed
     no_marches = (voxelvolume.shape[0] -1)*(voxelvolume.shape[1] -1)*(voxelvolume.shape[2] -1)
 
-    #Declaring variables before march
+    # Declaring variables before march
     plus_z = False
     e5, e6, e7, e8 = [0,0,0], [0,0,0], [0,0,0], [0,0,0]
     face_list = []
 
-    for n in range(no_marches): #begin march, starting at zero
-
+    for n in range(no_marches): # Begin march, starting at zero
         #Set local coordinates
         x0, y0, z0 = currentcoord[0], currentcoord[1], currentcoord[2]
         x1, y1, z1 = x0+1, y0+1, z0+1
 
         r0, c0, d0, r1, c1, d1 = x0, y0, z0, x1, y1, z1
 
-
-        #Stores the Voxel Volume's value # at v1, v2, v3, v4, v5, v6, v7 & v8
+        # Stores the Voxel Volume's value # at v1, v2, v3, v4, v5, v6, v7 & v8
         v_coord = np.array([voxelvolume[y0,z0,x0], voxelvolume[y0,z0,x1], voxelvolume[y0,z1,x1], voxelvolume[y0,z1,x0], voxelvolume[y1,z0,x0], voxelvolume[y1,z0,x1],voxelvolume[y1,z1,x1],voxelvolume[y1,z1,x0]])
 
-        #Calculate cube index
+        # Calculate cube index
         index=0
         for i in np.arange(8):
             if isorange[0] <= v_coord[i] < isorange[1]:
                 index = index + (2**i)
 
-        """
-        There are 2^8=256 unique vertex selection combinations.
-        The first state (0) occurs when none of the vertices are within the isorange.
-        The last state (255) occurs when all the vertices are within the isorange.
+        # There are 2^8=256 unique vertex selection combinations.
+        # The first state (0) occurs when none of the vertices are within the isorange.
+        # The last state (255) occurs when all the vertices are within the isorange.
 
-        By considering complementary cases, the number of states can be halved to 128 -
-        vertices left out become vertices included.
-        Furthermore, by considering rotational symmetry, the number of states is reduced to 15.
-        """
+        # By considering complementary cases, the number of states can be halved to 128 -
+        # vertices left out become vertices included.
+        # Furthermore, by considering rotational symmetry, the number of states is reduced to 15.
 
-        if index!=0 and index !=255: #if a plane intersects the cube
+        if index != 0 and index != 255: # If a plane intersects the cube
 
             if index > 127:
                 if index != 150 and index != 170 and index != 195:
-                    index = 255 - index #reverse the cube
+                    index = 255 - index # Reverse the cube
 
-            if plus_z: #if edge intercept coord has already been calculated, reassign
+            if plus_z:  # If edge intercept coord has already been calculated, reassign
                 e1=e5
                 e2=e6
                 e3=e7
                 e4=e8
-            else: #calculate edge intercept coord
+            else:       # Calculate edge intercept coord
                 e1=r0 + get_frac(v_coord[0], v_coord[1], isorange), c0, d0
                 e2=r1, c0 + get_frac(v_coord[1], v_coord[2], isorange), d0
                 e3=r0 + get_frac(v_coord[3], v_coord[2], isorange), c1, d0
@@ -914,45 +928,45 @@ def march(voxelvolume, isorange):
 
             append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12)
 
-        #Advance to the next cube
-
-        if currentcoord[2] < voxelvolume.shape[1] -2: #if z is within Voxel Volume's z-dimension
-            currentcoord[2] += 1 #advance z (x y z+1)
-            plus_z = True #reassign top face to the next bottom face
-            #"001, 002, 003, ..."
+        # Advance to the next cube
+        if currentcoord[2] < voxelvolume.shape[1] -2: # If z is within Voxel Volume's z-dimension
+            currentcoord[2] += 1 # Advance z (x y z+1)
+            plus_z = True # Reassign top face to the next bottom face
+            # "001, 002, 003, ..."
 
         elif currentcoord[1] < voxelvolume.shape[0] -2: # then when z hits max, move to (x y+1 0)
             currentcoord[1] += 1
             currentcoord[2] =0
             plus_z = False
-            #"010, 011, 012, 013...; 020, ..."
+            # "010, 011, 012, 013...; 020, ..."
 
         else:
-            currentcoord[0] += 1 #when both z and y hit max, move to (x+1 0 0) and repeat z and y iterations.
+            currentcoord[0] += 1 # When both z and y hit max, move to (x+1 0 0) and repeat z and y iterations.
             currentcoord[1] = 0
             currentcoord[2] = 0
             plus_z = False
-            #"100, 101, 102, 103...; 111, 112, 113..., 121, ...; 200, ..."
+            # "100, 101, 102, 103...; 111, 112, 113..., 121, ...; 200, ..."
 
 
     return face_list
 
 def uniqueverts(tri_list):
+    """Find unique vertices"""
     vert_index = {}
     vert_list = []
     face_list = []
     no_tris = len(tri_list)
-    idx=0
+    idx = 0
 
-    for i in range(no_tris): #Iterate
+    for i in range(no_tris): # Iterate
         templist =[]
 
-        #Parse vertices from non-degenerate triangles only
+        # Parse vertices from non-degenerate triangles only
         if not ((tri_list[i][0] == tri_list[i][1]) or (tri_list[i][0] == tri_list[i][2]) or (tri_list[i][1] == tri_list[i][2])):
-            for j in range(3): #For each vertex within a triangle
+            for j in range(3): # For each vertex within a triangle
                 vert = tri_list[i][j]
 
-                if vert not in vert_index: #check if a unique vertex is found
+                if vert not in vert_index: # Check if a unique vertex is found
                     vert_index[vert] = idx
                     templist.append(idx)
                     vert_list.append(vert)
@@ -962,55 +976,23 @@ def uniqueverts(tri_list):
 
             face_list.append(templist)
 
-
     return vert_list, face_list
 
+def isosurface(pointcloud, isorange):
+    """Return verts/faces array for isosurface from pointcloud and isorange"""
 
-def get_Lists(voxelvolume, isorange):
-
-    """
-    Return list of length-3 lists. Each sublist contains three tuples:
-    (x,y,z) coords for all triangle vertices, including repeats.
-    """
-    raw_faces = march(voxelvolume, isorange)
-    """
-    Finds and collects unique vertices, storing as indices.
-    Returns a true mesh with no degenerate faces.
-    """
-    verts, faces = uniqueverts(raw_faces)
-
-    return np.asarray(verts), np.asarray(faces)
-
-
-def isosurface_OBJ(pointcloud, isorange):
-
-    """INPUTS"""
-    #Retrieve the 3D Voxel Volume from 'voxelise'
+    # Retrieve the 3D Voxel Volume from 'voxelise'
     voxelvolume = voxelise(pointcloud)
 
-    #User defined isorange
-    #isorange = np.array([0.9, 1.1]) #[lower bound, upper bound]
+    # Return list of length-3 lists. Each sublist contains three tuples:
+    # (x,y,z) coords for all triangle vertices, including repeats.
+    raw_faces = march(voxelvolume, isorange)
 
-    """FUNCTIONS"""
-    vertices, triangles = get_Lists(voxelvolume, isorange)
+    # Finds and collects unique vertices, storing as indices. Returns
+    # a true mesh with no degenerate faces
+    verts, faces = uniqueverts(raw_faces)
+
+    #vertices, triangles = get_Lists(voxelvolume, isorange)
     #triangles = get_Lists(voxelvolume, isorange)[1] +1 #add 1 to index for read as .obj
 
-    filename = "range_{0}-{1}.obj".format(int(isorange[0]*10), int(isorange[1]*10))
-    file = open(filename, 'w+')
-    file.write('# ACMM')
-    for l in range(vertices.shape[0]):
-        file.write('\nv')
-        for ll in range(3):
-            numero = " {0}".format(vertices[l][ll])
-            file.write(numero)
-    for m in range(triangles.shape[0]):
-        file.write('\nf')
-        for mm in range(3):
-            numero = " {0}".format(triangles[m][mm])
-            file.write(numero)
-    file.close()
-    print (filename, 'has been saved into the local directory.')
-
-    return vertices, triangles #as array or as reference to where file is saved?
-
-
+    return verts, faces #as array or as reference to where file is saved?
