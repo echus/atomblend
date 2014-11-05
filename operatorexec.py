@@ -34,9 +34,10 @@ def analysis_isosurface_gen(self, context):
     print("Calculating isosurface ...")
     verts, faces = analysis.isosurface.generate(data.xyz, isorange)
     print("Calculating isosurface ... done!")
+    edges = []
 
-    print(verts[0:50])
-    print(faces[0:50])
+    # Draw object
+    blend.object.object_add_from_pydata("Isosurface", verts, edges, faces)
 
     return {'FINISHED'}
 
