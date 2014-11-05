@@ -278,3 +278,11 @@ class VIEW3D_OT_scale_child(Operator):
 
     def execute(self, context):
         return opexec.scale_child(self, context)
+
+class VIEW3D_OT_animation_add(Operator):
+    """Add animation around the currently selected object"""
+    bl_idname = "atomblend.animation_add"
+    bl_label = "Animate!"
+
+    def execute(self, context):
+        return opexec.animation_add(self, context)

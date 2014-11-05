@@ -25,16 +25,16 @@ ROT_ANGLE       = 360 * 3.1416/180  # Angle the camera will rotate in rad
 RESX            = 1024
 RESY            = 1024
 
-def animation_add(target,
-                  offset,
-                  cam_orth_scale=CAM_ORTH_SCALE,
-                  cam_clip_dist=CAM_CLIP_DIST,
-                  time=TIME,
-                  fps=FPS,
-                  rot_angle=ROT_ANGLE,
-                  resx=RESX,
-                  resy=RESY
-                  ):
+def add(target,
+        offset,
+        cam_orth_scale=CAM_ORTH_SCALE,
+        cam_clip_dist=CAM_CLIP_DIST,
+        time=TIME,
+        fps=FPS,
+        rot_angle=ROT_ANGLE,
+        resx=RESX,
+        resy=RESY
+        ):
     # Scene setup
     end_frame = START_FRAME + time * fps - 1
 
@@ -104,11 +104,3 @@ def animation_add(target,
     bpy.ops.graph.extrapolation_type(type='LINEAR')
 
     bpy.context.area.type = old_area_type
-
-
-
-
-# === Test settings ===
-offset = (100, 0, 100)         # offset of camera with respect to origin
-target = (0, 0, 90)
-animation_add(target, offset)

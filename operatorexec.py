@@ -18,6 +18,25 @@ from .aptread import APTloader
 from . import blend
 
 # === Operator execute functions ===
+def animation_add(self, context):
+    """Add animation to selected object"""
+    # Get active object
+    obj = context.object
+
+    # Get POS xyz data
+    props = context.scene.pos_panel_props
+    # FIXME don't load this again!!! save as global var for now?
+    data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
+    data_centre = np.average(data.xyz, axis=0)
+
+    # Set camera location and offset
+    cam_target = data_centre
+    cam_offset = list(data_centre)
+    cam_offset[0] += 100
+
+    blend.animation.add(cam_target, cam_offset)
+    return {'FINISHED'}
+
 def scale_child(self, context):
     obj = context.object
     child = obj.children[0]

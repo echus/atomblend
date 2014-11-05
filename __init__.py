@@ -184,6 +184,15 @@ class VIEW3D_PT_data_render(AtomBlendPanel, Panel):
         row = layout.row()
         row.operator("render.render", text="Render", icon='RENDER_STILL')
 
+class VIEW3D_PT_data_animation(AtomBlendPanel, Panel):
+    """Animation operators and settings"""
+    bl_label = "Animation"
+
+    def draw(self, context):
+        layout = self.layout
+        col = layout.column(align=True)
+        col.operator("atomblend.animation_add")
+
 
 
 # === Helper functions ===
