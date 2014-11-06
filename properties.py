@@ -74,6 +74,14 @@ class VIEW3D_PT_pos_panel_props(PropertyGroup):
     plot_options = [('EA', "Atomic", "Atomic"), ('ION', "Ionic", "Ionic"), ('ISO', "Isotopic", "Isotopic")]
     plot_type = EnumProperty(name="Bake options", items=plot_options)
 
+    # Boundbox padding
+    boundbox_padding = FloatProperty(
+            name="Padding",
+            description="Bounding box padding",
+            default=0.5,
+            min=0.0, max=100.0,
+            )
+
     animation_scale     = FloatProperty(default=150, min=0)
     animation_clip_dist = FloatProperty(default=500, min=0)
     animation_time      = FloatProperty(default=4, min=0)

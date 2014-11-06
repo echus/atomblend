@@ -88,7 +88,8 @@ def make_camera_active(self, context):
 def add_bounding_box(self, context):
     """Calculate and add a bounding box to the current data"""
     props = context.scene.pos_panel_props
-    padding = self.padding
+    padding = props.boundbox_padding
+    #padding = self.padding
 
     # FIXME don't load this again!!! save as global var for now?
     data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)

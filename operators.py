@@ -199,14 +199,6 @@ class VIEW3D_OT_add_bounding_box(Operator):
     bl_idname = "atomblend.add_bound_box"
     bl_label = "Add bounding box"
 
-    # Boundbox padding
-    padding = FloatProperty(
-            name="Padding",
-            description="Bounding box padding",
-            default=0.5,
-            min=0.0, max=100.0,
-            )
-
     def execute(self, context):
         return opexec.add_bounding_box(self, context)
 

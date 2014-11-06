@@ -133,18 +133,11 @@ class VIEW3D_PT_data_visualisation(AtomBlendPanel, Panel):
             col.prop(mod, "thickness", text="Thickness")
             col.prop(mat, "diffuse_color", text="")
         else:
-            boundbox_props = col.operator("atomblend.add_bound_box")
-            col.prop(boundbox_props, "padding")
+            col.operator("atomblend.add_bound_box")
+            col.prop(props, "boundbox_padding")
+            #boundbox_props = col.operator("atomblend.add_bound_box")
+            #col.prop(boundbox_props, "padding")
             #bpy.ops.atomblend.add_bound_box.padding
-
-        # pointcloud: experimental
-        #row = layout.row()
-        #col = layout.column(align=True)
-        #col.label(text="Pointcloud:")
-        #col.operator("atomblend.pointcloud_add")
-        #subrow = col.row(align=True)
-        #subrow.prop(props, "ptcld_color")
-        #subrow.prop(props, "ptcld_emit")
 
 class VIEW3D_PT_data_render(AtomBlendPanel, Panel):
     """Final touches"""
