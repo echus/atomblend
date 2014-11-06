@@ -82,7 +82,7 @@ class VIEW3D_PT_pos_panel_props(PropertyGroup):
             min=0.0, max=100.0,
             )
 
-    animation_scale     = FloatProperty(default=150, min=0)
+    animation_scale     = FloatProperty(default=80, min=0)
     animation_clip_dist = FloatProperty(default=500, min=0)
     animation_time      = FloatProperty(default=4, min=0)
     animation_fps       = FloatProperty(default=25, min=0)
