@@ -87,6 +87,8 @@ class VIEW3D_PT_data_visualisation(AtomBlendPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        props = context.scene.pos_panel_props
+
         col = layout.column(align=True)
 
         obj = context.object
