@@ -195,6 +195,8 @@ class VIEW3D_PT_data_animation(AtomBlendPanel, Panel):
         col = layout.column(align=True)
         col.operator("atomblend.animation_add")
         subrow = col.row(align=True)
+        subrow.prop(props, "animation_offset", text="Offset")
+        subrow = col.row(align=True)
         subrow.prop(props, "animation_time", text="Time")
         subrow.prop(props, "animation_scale", text="Scale")
         subrow = col.row(align=True)

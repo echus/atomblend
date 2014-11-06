@@ -48,12 +48,18 @@ def animation_add(self, context):
     data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
     data_centre = np.average(data.xyz, axis=0)
 
-    # Set camera location and offset
+    # Set camera location and offset from dataset (user)
     cam_target = data_centre
     cam_offset = list(data_centre)
-    cam_offset[0] += 100
+    cam_offset[0] += props.animation_offset
 
-    blend.animation.add(cam_target, cam_offset)
+    blend.animation.add(target=cam_target,
+                        offset=cam_offset,
+                        cam_orth_scale=props.animation_scale,
+                        cam_clip_dist=props.animation_clip_dist,
+                        time=props.animation_time,
+                        fps=props.animation_fps,
+                        )
     return {'FINISHED'}
 
 def scale_child(self, context):
