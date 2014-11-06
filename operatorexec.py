@@ -51,7 +51,8 @@ def animation_add(self, context):
     # Set camera location and offset from dataset (user)
     cam_target = data_centre
     cam_offset = list(data_centre)
-    cam_offset[0] += props.animation_offset
+    cam_offset[0] += props.animation_offsetx
+    cam_offset[2] += props.animation_offsetz
 
     blend.animation.add(target=cam_target,
                         offset=cam_offset,
