@@ -190,8 +190,19 @@ class VIEW3D_PT_data_animation(AtomBlendPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        props = context.scene.pos_panel_props
+
         col = layout.column(align=True)
         col.operator("atomblend.animation_add")
+        subrow = col.row(align=True)
+        subrow.prop(props, "animation_time", text="Time")
+        subrow.prop(props, "animation_scale", text="Scale")
+        subrow = col.row(align=True)
+        subrow.prop(props, "animation_fps", text="FPS")
+        subrow.prop(props, "animation_clip_dist", text="Clip")
+
+        #row = layout.row()
+        #row.operator("render.render", text="Render animation", icon='RENDER_ANIMATION')
 
 class VIEW3D_PT_data_analysis(AtomBlendPanel, Panel):
     """Analysis operators and settings"""
@@ -199,10 +210,13 @@ class VIEW3D_PT_data_analysis(AtomBlendPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        props = context.scene.pos_panel_props
+
         col = layout.column(align=True)
         col.operator("atomblend.analysis_isosurf")
-
-
+        subrow = col.row(align=True)
+        subrow.prop(props, "analysis_isosurf_rangefrom", text="Isorange")
+        subrow.prop(props, "analysis_isosurf_rangeto", text="")
 
 # === Helper functions ===
 def has_halo(obj):

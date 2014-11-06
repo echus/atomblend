@@ -74,18 +74,10 @@ class VIEW3D_PT_pos_panel_props(PropertyGroup):
     plot_options = [('EA', "Atomic", "Atomic"), ('ION', "Ionic", "Ionic"), ('ISO', "Isotopic", "Isotopic")]
     plot_type = EnumProperty(name="Bake options", items=plot_options)
 
-    # === pointcloud experimental ===
-    #ptcld_color = FloatVectorProperty(
-    #        name="",
-    #        description="Color of pointcloud",
-    #        default=DEFAULT_COLOR,
-    #        min=0.0, max=1.0,
-    #        subtype='COLOR'
-    #        )
-    #
-    #ptcld_emit = FloatProperty(
-    #        name="Emit",
-    #        description="Emit strength of pointcloud",
-    #        default=1.0,
-    #        min=0.0, max=10.0,
-    #        )
+    animation_scale     = FloatProperty(default=150, min=0)
+    animation_clip_dist = FloatProperty(default=500, min=0)
+    animation_time      = FloatProperty(default=4, min=0)
+    animation_fps       = FloatProperty(default=25, min=0)
+
+    analysis_isosurf_rangefrom = FloatProperty(default=0,  min=0)
+    analysis_isosurf_rangeto   = FloatProperty(default=10, min=0)

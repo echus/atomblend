@@ -27,13 +27,12 @@ def analysis_isosurface_gen(self, context):
     data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
 
     # Get user specified isorange
-    # TODO
-    isorange = [2, 6]
+    isorange = [props.analysis_isosurf_rangefrom, props.analysis_isosurf_rangeto]
 
     # Calculate isosurface
-    print("Calculating isosurface ...")
+    print("Calculating isosurface for isorange", isorange)
     verts, faces = analysis.isosurface.generate(data.xyz, isorange)
-    print("Calculating isosurface ... done!")
+    print("Calculating isosurface done!")
     edges = []
 
     # Draw object
