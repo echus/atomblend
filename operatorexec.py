@@ -23,15 +23,15 @@ def analysis_isosurface_gen(self, context):
     """Perform isosurface analysis on current dataset"""
     # Get POS xyz data
     props = context.scene.pos_panel_props
+    # Get user specified isorange
+    isorange = [props.analysis_isosurf_rangefrom, props.analysis_isosurf_rangeto]
     # FIXME don't load this again!!! save as global var for now?
     data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
 
-    # Get user specified isorange
-    isorange = [props.analysis_isosurf_rangefrom, props.analysis_isosurf_rangeto]
-
-    # Calculate isosurface
+    print("Calculating voxelisation")
+    voxarray = analysis.voxelisation.generate(data.xyz)
     print("Calculating isosurface for isorange", isorange)
-    verts, faces = analysis.isosurface.generate(data.xyz, isorange)
+    verts, faces = analysis.isosurface.generate(voxarray, isorange)
     print("Calculating isosurface done!")
     edges = []
 

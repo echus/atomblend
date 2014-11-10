@@ -24,12 +24,12 @@ def generate(coords, bin=1):
           or equal to the smallest measurable division of XYZ (ie: one atom
           cannot be in two voxels)
 
-    Output - 'threedee': Voxelized pointcloud as a 3D matrix, tallying the number of
+    Output - 'voxelarray': Voxelized pointcloud as a 3D matrix, tallying the number of
     points per voxel (bin) across the volume of the pointcloud
     """
 
     if coords.shape[1] != 3:
-        raise ValueError("Positions not entered as columns X, Y, Z.")
+        raise ValueError("voxelisation.generate: Positions not entered as columns X, Y, Z.")
 
     # Calculate min, max and range of XYZ
     min_ = np.empty(3)
