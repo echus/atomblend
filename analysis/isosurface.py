@@ -23,7 +23,7 @@ def generate(voxelarray, isorange):
     Returns vertices, faces as 2D numpy array
     """
 
-    verts, faces = get_Lists(voxelarray, isorange)
+    verts, faces = _get_lists(voxelarray, isorange)
 
     return verts, faces #as array or as reference to where file is saved?
 
@@ -33,7 +33,7 @@ def generate(voxelarray, isorange):
 
 # TODO make these private _functions
 
-def get_frac(from_value, to_value, isorange):
+def _get_frac(from_value, to_value, isorange):
     if (to_value == from_value):
         return 0
     if from_value <= isorange[0]: #if less than or equal to min isovalue
@@ -44,7 +44,7 @@ def get_frac(from_value, to_value, isorange):
     # ie when from value is greater than max isovalue
     # or when to value is less than min isovalue
 
-def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12):
+def _append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12):
 #Recursion for duplicated planes to conserve code
     if (index == 1):
         # front lower left corner
@@ -61,9 +61,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e12, e3, e2])
     elif (index == 5):
         # lower left, upper right corners
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 6):
         # front right plane
@@ -83,9 +83,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e3, e9, e1])
     elif (index == 10):
         # upper left, lower right corners
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 11):
         # Shelf including v4, v1, v2
@@ -119,9 +119,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e8, e1, e5])
     elif (index == 18):
         # lower left back, lower right front corners
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 19):
         # Shelf including v1, v2, v5
@@ -130,21 +130,21 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e8, e10, e5])
     elif (index == 20):
         # lower left back, upper right front corners
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 21):
         # lower left plane + upper right front corner, v1, v3, v5
-        append_tris(face_list, 17, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 17, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 22):
         # front right plane + lower left back corner, v2, v3, v5
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 6, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 6, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 23):
         # Rotated case 14 in the paper
@@ -154,9 +154,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e3, e4, e8])
     elif (index == 24):
         # upper front left, lower back left corners
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 25):
         # Shelf including v1, v4, v5
@@ -165,11 +165,11 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e3, e5, e8])
     elif (index == 26):
         # Three isolated corners
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 27):
         # Full corner v1, index 9 in paper: (v1, v2, v4, v5)
@@ -179,9 +179,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e8, e5, e10])
     elif (index == 28):
         # upper front plane + corner v5
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 12, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 12, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 29):
         # special case of 11 in the paper: (v1, v3, v4, v5)
@@ -191,9 +191,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e2, e1, e5])
     elif (index == 30):
         # Shelf (v2, v3, v4) and lower left back corner
-        append_tris(face_list, 14, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 14, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 31):
         # Shelf: (v6, v7, v8) by inversion
@@ -205,9 +205,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e6, e5, e10])
     elif (index == 33):
         # lower right back, lower left front corners
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 34):
         # lower right plane
@@ -220,17 +220,17 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e6, e9, e5])
     elif (index == 36):
         # upper right front, lower right back corners
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 37):
         # lower left front, upper right front, lower right back corners
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 38):
         # Shelf: v2, v3, v6
@@ -245,21 +245,21 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e3, e12, e6])
     elif (index == 40):
         # upper left front, lower right back corners
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 41):
         # front left plane, lower right back corner
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 9, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 9, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 42):
         # lower right plane, upper front left corner
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 34, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 34, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 43):
         # Rotated index 11 in paper
@@ -269,15 +269,15 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e9, e5, e6])
     elif (index == 44):
         # upper front plane, lower right back corner
-        append_tris(face_list, 12, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 12, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 45):
         # Shelf: (v1, v3, v4) + lower right back corner
-        append_tris(face_list, 13, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 13, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 46):
         # Rotated case 14 in paper
@@ -310,15 +310,15 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e8, e2, e6])
     elif (index == 52):
         # Back lower plane, and front upper right corner
-        append_tris(face_list, 48, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 48, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 53):
         # Shelf (v1, v5, v6) and front upper right corner
-        append_tris(face_list, 49, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 49, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 54):
         # Rotated case 11 from paper (v2, v3, v5, v6)
@@ -333,9 +333,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e6, e3, e12])
     elif (index == 56):
         # Back lower plane + upper left front corner
-        append_tris(face_list, 48, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 48, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 57):
         # Rotated index 14 from paper (v4, v1, v5, v6)
@@ -345,9 +345,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e3, e1, e10])
     elif (index == 58):
         # Shelf: (v2, v6, v5) + upper left front corner
-        append_tris(face_list, 50, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 50, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 59):
         # Shelf: (v3, v7, v8) by inversion
@@ -356,21 +356,21 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e8, e3, e11])
     elif (index == 60):
         # AMBIGUOUS case: parallel planes (front upper, back lower)
-        append_tris(face_list, 48, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 48, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 12, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 12, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 61):
         # Upper back plane + lower right front corner by inversion
-        append_tris(face_list, 63, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 63, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 62):
         # Upper back plane + lower left front corner by inversion
-        append_tris(face_list, 63, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 63, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 63):
         # Upper back plane
@@ -381,21 +381,21 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e12, e7, e6])
     elif (index == 65):
         # upper right back, lower left front corners
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 66):
         # upper right back, lower right front corners
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 67):
         # lower front plane + upper right back corner
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 3, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 3, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 68):
         # upper right plane
@@ -403,9 +403,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e3, e7, e6])
     elif (index == 69):
         # Upper right plane, lower left front corner
-        append_tris(face_list, 68, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 68, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 70):
         # Shelf: (v2, v3, v7)
@@ -420,29 +420,29 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e7, e10, e6])
     elif (index == 72):
         # upper left front, upper right back corners
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 73):
         # front left plane, upper right back corner
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 9, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 9, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 74):
         # Three isolated corners, exactly case 7 in paper
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 75):
         # Shelf: (v1, v2, v4) + upper right back corner
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 11, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 11, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 76):
         # Shelf: (v4, v3, v7)
@@ -468,111 +468,111 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e7, e10, e6])
     elif (index == 80):
         # lower left back, upper right back corners (v5, v7)
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 81):
         # lower left plane, upper right back corner
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 17, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 17, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 82):
         # isolated corners (v2, v5, v7)
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 83):
         # Shelf: (v1, v2, v5) + upper right back corner
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 19, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 19, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 84):
         # upper right plane, lower left back corner
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 68, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 68, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 85):
         # AMBIGUOUS index: upper right and lower left parallel planes
-        append_tris(face_list, 17, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 17, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 68, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 68, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 86):
         # Shelf: (v2, v3, v7) + lower left back corner
-        append_tris(face_list, 70, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 70, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 87):
         # Upper left plane + lower right back corner, by inversion
-        append_tris(face_list, 119, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 119, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 88):
         # Isolated corners v4, v5, v7
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 89):
         # Shelf: (v1, v4, v5) + isolated corner v7
-        append_tris(face_list, 25, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 25, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 90):
         # Four isolated corners v2, v4, v5, v7
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 64, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 91):
         # Three isolated corners, v3, v6, v8 by inversion
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 92):
         # Shelf (v4, v3, v7) + isolated corner v5
-        append_tris(face_list, 76, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 76, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 16, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 93):
         # Lower right plane + isolated corner v8 by inversion
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 34, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 34, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 94):
         # Isolated corners v1, v6, v8 by inversion
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 95):
         # Isolated corners v6, v8 by inversion
-        append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 32, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 96):
         # back right plane
@@ -580,9 +580,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e5, e10, e12])
     elif (index == 97):
         # back right plane + isolated corner v1
-        append_tris(face_list, 96, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 96, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 98):
         # Shelf: (v2, v6, v7)
@@ -602,9 +602,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e2, e5, e10])
     elif (index == 101):
         # Shelf: (v3, v6, v7) + isolated corner v1
-        append_tris(face_list, 100, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 100, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 102):
         # Plane bisecting left-right halves of cube
@@ -617,27 +617,27 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e4, e5, e9])
     elif (index == 104):
         # Back right plane + isolated corner v4
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 96, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 96, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 105):
         # AMBIGUOUS case: back right and front left planes
-        append_tris(face_list, 96, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 96, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 9, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 9, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 106):
         # Shelf: (v2, v6, v7) + isolated corner v4
-        append_tris(face_list, 98, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 98, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 107):
         # Back left plane + isolated corner v3 by inversion
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 111, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 111, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 108):
         # Rotated case 11 from paper: (v4, v3, v7, v6)
@@ -647,9 +647,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e7, e10, e5])
     elif (index == 109):
         # Back left plane + isolated corner v2 by inversion
-        append_tris(face_list, 111, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 111, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 110):
         # Shelf: (v1, v5, v8) by inversion
@@ -690,9 +690,9 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e2, e3, e7])
     elif (index == 117):
         # upper left plane + isolated corner v2 by inversion
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 119, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 119, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 118):
         # Shelf: (v1, v4, v8)
@@ -705,47 +705,47 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         face_list.append([e4, e8, e7])
     elif (index == 120):
         # Shelf: (v5, v6, v7) + isolated corner v4
-        append_tris(face_list, 112, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 112, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 8, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 121):
         # Front right plane + isolated corner v8
-        append_tris(face_list, 6, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 6, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 122):
         # Isolated corners v1, v3, v8
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 123):
         # Isolated corners v3, v8
-        append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 4, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 124):
         # Front lower plane + isolated corner v8
-        append_tris(face_list, 3, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 3, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 125):
         # Isolated corners v2, v8
-        append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 2, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 126):
         # Isolated corners v1, v8
-        append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 1, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 127, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 127):
         # Isolated corner v8
@@ -754,31 +754,30 @@ def append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, 
         # AMBIGUOUS case: back right and front left planes
         # In these index > 127 indexs, the vertices are identical BUT
         # they are connected in the opposite fashion.
-        append_tris(face_list, 6, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 6, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 111, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 111, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 170):
         # AMBIGUOUS case: upper left and lower right planes
         # In these index > 127 indexs, the vertices are identical BUT
         # they are connected in the opposite fashion.
-        append_tris(face_list, 119, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 119, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 34, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 34, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
     elif (index == 195):
         # AMBIGUOUS case: back upper and front lower planes
         # In these index > 127 indexs, the vertices are identical BUT
         # they are connected in the opposite fashion.
-        append_tris(face_list, 63, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 63, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
-        append_tris(face_list, 3, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
+        _append_tris(face_list, 3, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10,
                      e11, e12)
 
     return
 
-def march(voxelvolume, isorange):
-
+def _marching_cubes(voxelvolume, isorange):
     #Checks
     if voxelvolume.ndim != 3:
         raise ValueError("A 3D matrix required as input.")
@@ -866,20 +865,20 @@ def march(voxelvolume, isorange):
                 e3=e7
                 e4=e8
             else: #calculate edge intercept coord
-                e1=r0 + get_frac(v_coord[0], v_coord[1], isorange), c0, d0
-                e2=r1, c0 + get_frac(v_coord[1], v_coord[2], isorange), d0
-                e3=r0 + get_frac(v_coord[3], v_coord[2], isorange), c1, d0
-                e4=r0, c0 + get_frac(v_coord[0], v_coord[3], isorange), d0
-            e5= r0 + get_frac(v_coord[4], v_coord[5], isorange), c0, d1
-            e6= r1, c0 + get_frac(v_coord[5], v_coord[6], isorange), d1
-            e7= r0 + get_frac(v_coord[7], v_coord[6], isorange), c1, d1
-            e8= r0, c0 + get_frac(v_coord[4], v_coord[7], isorange), d1
-            e9= r0, c0, d0 + get_frac(v_coord[0], v_coord[4], isorange)
-            e10= r1, c0, d0 + get_frac(v_coord[1], v_coord[5], isorange)
-            e11= r0, c1, d0 + get_frac(v_coord[3], v_coord[7], isorange)
-            e12= r1, c1, d0 + get_frac(v_coord[2], v_coord[6], isorange)
+                e1=r0 + _get_frac(v_coord[0], v_coord[1], isorange), c0, d0
+                e2=r1, c0 + _get_frac(v_coord[1], v_coord[2], isorange), d0
+                e3=r0 + _get_frac(v_coord[3], v_coord[2], isorange), c1, d0
+                e4=r0, c0 + _get_frac(v_coord[0], v_coord[3], isorange), d0
+            e5= r0 + _get_frac(v_coord[4], v_coord[5], isorange), c0, d1
+            e6= r1, c0 + _get_frac(v_coord[5], v_coord[6], isorange), d1
+            e7= r0 + _get_frac(v_coord[7], v_coord[6], isorange), c1, d1
+            e8= r0, c0 + _get_frac(v_coord[4], v_coord[7], isorange), d1
+            e9= r0, c0, d0 + _get_frac(v_coord[0], v_coord[4], isorange)
+            e10= r1, c0, d0 + _get_frac(v_coord[1], v_coord[5], isorange)
+            e11= r0, c1, d0 + _get_frac(v_coord[3], v_coord[7], isorange)
+            e12= r1, c1, d0 + _get_frac(v_coord[2], v_coord[6], isorange)
 
-            append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12)
+            _append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12)
 
         #Advance to the next cube
 
@@ -904,7 +903,7 @@ def march(voxelvolume, isorange):
 
     return face_list
 
-def uniqueverts(tri_list):
+def _uniqueverts(tri_list):
     vert_index = {}
     vert_list = []
     face_list = []
@@ -933,18 +932,17 @@ def uniqueverts(tri_list):
     return vert_list, face_list
 
 
-def get_Lists(voxelvolume, isorange):
-
+def _get_lists(voxelvolume, isorange):
     """
     Return list of length-3 lists. Each sublist contains three tuples:
     (x,y,z) coords for all triangle vertices, including repeats.
     """
-    raw_faces = march(voxelvolume, isorange)
+    raw_faces = _marching_cubes(voxelvolume, isorange)
     """
     Finds and collects unique vertices, storing as indices.
     Returns a true mesh with no degenerate faces.
     """
-    verts, faces = uniqueverts(raw_faces)
+    verts, faces = _uniqueverts(raw_faces)
 
     return np.asarray(verts), np.asarray(faces)
 
