@@ -30,9 +30,6 @@ def generate(voxelarray, isorange):
 
 
 
-
-# TODO make these private _functions
-
 def _get_frac(from_value, to_value, isorange):
     if (to_value == from_value):
         return 0
