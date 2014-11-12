@@ -45,11 +45,12 @@ from . import operators
 from .properties import VIEW3D_PT_pos_panel_props
 
 # === Panel UI ===
+
+# === Mixin classes ===
 class AtomBlendPanel():
-    """Mixin parent class for common properties"""
+    """Mixin parent class for AtomBlend common properties"""
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
-    bl_category = "AtomBlend"
 
     # Only display in object mode
     @classmethod
@@ -57,7 +58,24 @@ class AtomBlendPanel():
         mode = context.mode
         return mode == 'OBJECT'
 
-class VIEW3D_PT_data_bake(AtomBlendPanel, Panel):
+class ImportPanel(AtomBlendPanel):
+    """Mixin for import/data load panel"""
+    bl_category = "Import"
+
+class VisualisationPanel(AtomBlendPanel):
+    """Mixin parent class for common properties"""
+    bl_category = "Visualisation"
+
+class AnalysisPanel(AtomBlendPanel):
+    """Mixin parent class for common properties"""
+    bl_category = "Analysis"
+
+
+
+# === View definitions ===
+
+# === Import panel ===
+class VIEW3D_PT_data_bake(ImportPanel, Panel):
     """Bake to object panel"""
     bl_label = "Import data"
 
@@ -81,7 +99,10 @@ class VIEW3D_PT_data_bake(AtomBlendPanel, Panel):
         row = layout.row()
         row.operator("atomblend.clear_button")
 
-class VIEW3D_PT_data_visualisation(AtomBlendPanel, Panel):
+
+
+# === Visualisation panel ===
+class VIEW3D_PT_data_visualisation(VisualisationPanel, Panel):
     """Visualisation panel viewed in object mode with an AtomBlend-generated dataset selected"""
     bl_label = "Visualisation"
 
@@ -141,7 +162,7 @@ class VIEW3D_PT_data_visualisation(AtomBlendPanel, Panel):
             #col.prop(boundbox_props, "padding")
             #bpy.ops.atomblend.add_bound_box.padding
 
-class VIEW3D_PT_data_render(AtomBlendPanel, Panel):
+class VIEW3D_PT_data_render(VisualisationPanel, Panel):
     """Final touches"""
     bl_label = "Final touches"
 
@@ -179,7 +200,7 @@ class VIEW3D_PT_data_render(AtomBlendPanel, Panel):
         row = layout.row()
         row.operator("render.render", text="Render", icon='RENDER_STILL')
 
-class VIEW3D_PT_data_animation(AtomBlendPanel, Panel):
+class VIEW3D_PT_data_animation(VisualisationPanel, Panel):
     """Animation operators and settings"""
     bl_label = "Animation"
 
@@ -202,7 +223,10 @@ class VIEW3D_PT_data_animation(AtomBlendPanel, Panel):
         #row = layout.row()
         #row.operator("render.render", text="Render animation", icon='RENDER_ANIMATION')
 
-class VIEW3D_PT_data_analysis(AtomBlendPanel, Panel):
+
+
+# === Analysis Panel ===
+class VIEW3D_PT_data_analysis(AnalysisPanel, Panel):
     """Analysis operators and settings"""
     bl_label = "Analysis"
 
