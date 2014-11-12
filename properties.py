@@ -90,5 +90,5 @@ class VIEW3D_PT_pos_panel_props(PropertyGroup):
     animation_offsetx    = FloatProperty(default=100)
     animation_offsetz    = FloatProperty(default=50)
 
-    analysis_isosurf_rangefrom = FloatProperty(default=0,  min=0, max=1)
-    analysis_isosurf_rangeto   = FloatProperty(default=1, min=0, max=1)
+    analysis_isosurf_rangefrom = FloatProperty(default=0,  min=0)
+    analysis_isosurf_rangeto   = FloatProperty(default=1, min=0)
