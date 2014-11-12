@@ -264,6 +264,8 @@ def register():
     bpy.utils.register_module(__name__)
     bpy.types.Scene.pos_panel_props = bpy.props.PointerProperty(type=VIEW3D_PT_pos_panel_props)
 
+    print("AtomBlend registered successfully!")
+
 def unregister():
     bpy.utils.unregister_module(__name__)
     del bpy.types.Scene.pos_panel_props
