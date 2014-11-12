@@ -18,11 +18,12 @@ from bpy.props import BoolProperty, StringProperty, EnumProperty, FloatProperty,
 # TODO this should go in some global settings module
 DEFAULT_COLOR = (0, 0.144, 0.554)
 
+# === Global scene properties ===
+# Array for APTloader objects
+bpy.types.Scene.aptdata = []
 
-
-# === AtomBlend-specific object RNA properties ===
+# === Custom AtomBlend object RNA properties ===
 # Define AtomBlend-specific RNA props for every object
-# Set to True for top level objects (eg elements)
 
 # Defines object type in AtomBlend framework
 # Default: BLENDER for objects independent of AtomBlend
@@ -44,8 +45,6 @@ bpy.types.Object.vistype = EnumProperty(
         items = vtypes,
         default = 'NONE'
         )
-
-
 
 # === General panel properties ===
 class VIEW3D_PT_pos_panel_props(PropertyGroup):
