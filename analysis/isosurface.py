@@ -40,7 +40,7 @@ def _get_frac(from_value, to_value, isorange):
             return ((isorange[1] - from_value)/(to_value - from_value))
             #NOTE if both to and from values are IN the isorange, some number
             #will be returned, but SHOULDN'T be be mapped at all. Test!
-    elif (to value < from_value):
+    elif (to_value < from_value):
         if from_value < isorange[0]: #if less than isomin
             return ((isorange[0] - from_value)/(to_value - from_value))
             #NOTE if both to and from values are OUT of the isorange, some number
