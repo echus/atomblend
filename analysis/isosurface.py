@@ -25,21 +25,30 @@ def generate(voxelarray, isorange):
 
     verts, faces = _get_lists(voxelarray, isorange)
 
-    return verts, faces #as array or as reference to where file is saved?
+    return verts, faces
 
 
 
 
 def _get_frac(from_value, to_value, isorange):
     if (to_value == from_value):
-        return 0
-    if from_value <= isorange[0]: #if less than or equal to min isovalue
-        return ((isorange[0] - from_value)/(to_value - from_value))
-    elif from_value < isorange[1]: #if less than max isovalue but over min isovalue
-        return ((isorange[1] - from_value)/(to_value - from_value))
-    ### NOTE at the moment this returns 'NONE' for values outside the isorange.
-    # ie when from value is greater than max isovalue
-    # or when to value is less than min isovalue
+        return 0 #either entire edge is mapped or unmapped - regardless, no mapped intercept
+    elif (to_value > from_value):
+        if from_value < isorange[0]: #if less than isomin
+            return ((isorange[0] - from_value)/(to_value - from_value))
+        if from_value >= isorange[0]: #if same as or greater than isomin
+            return ((isorange[1] - from_value)/(to_value - from_value))
+            #NOTE if both to and from values are IN the isorange, some number
+            #will be returned, but SHOULDN'T be be mapped at all. Test!
+    elif (to value < from_value):
+        if from_value < isorange[0]: #if less than isomin
+            return ((isorange[0] - from_value)/(to_value - from_value))
+            #NOTE if both to and from values are OUT of the isorange, some number
+            #will be returned, but SHOULDN'T be be mapped at all. Test!
+        if from_value >= isorange[0]: #if same as or greater than isomin
+            return ((from_value - isorange[0])/(from_value - to_value))
+#Alternatively return something degenerate for stuff that is in and out.. ? Shouldn't matter,
+        #it's a bigger problem if it ends up being mapped.
 
 def _append_tris(face_list, index, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12):
 #Recursion for duplicated planes to conserve code
