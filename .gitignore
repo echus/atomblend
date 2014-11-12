@@ -3,8 +3,8 @@ __pycache__/
 *.py[cod]
  
 # APT data
-*.pos
-*.rng
+#*.pos
+#*.rng
 
 # OS generated files 
 .DS_Store
