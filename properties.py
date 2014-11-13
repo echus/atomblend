@@ -70,7 +70,7 @@ class VIEW3D_PT_pos_panel_props(PropertyGroup):
             default = "/"
         )
 
-    # Function to return aptdata enum from current context
+    # Function to return enum list of loaded pos files from current context
     def aptdata_enum(self, context):
         items = []
         for key in context.scene.aptdata:

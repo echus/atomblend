@@ -235,28 +235,27 @@ def clear(self, context):
     return {'FINISHED'}
 
 def bake(self, context):
-    # Draws currently selected data
-    # called by: draw_button operator
+    """Draws currently selected pos file"""
     props = context.scene.pos_panel_props
-    plot_type = props.plot_type
+    fn = props.file_list        # Name of pos file to load
+    plot_type = props.plot_type # Atomic/Ionic/Isotopic
 
-    # FIXME temp don't do this, should be able to store ReadAPTData object in blender props??
-    data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
+    data = context.scene.aptdata[fn]
 
     if plot_type == 'ISO':
-        groupname = "Isotopes"
+        groupname = fn+" isotopic"
         listfunc = "rnglist"
         getfunc = "getrng"
     elif plot_type == 'EA':
-        groupname = "Elements"
+        groupname = fn+" atomic"
         listfunc = "atomlist"
         getfunc = "getatom"
     elif plot_type == 'ION':
-        groupname = "Ions"
+        groupname = fn+" ionic"
         listfunc = "ionlist"
         getfunc = "getion"
 
-    # populate item names and point locations
+    # Populate item names and point locations
     itemlist = getattr(data, listfunc)
 
     namelist = []
@@ -285,10 +284,12 @@ def load_posrng(self, context):
     Load APT pos/rng data to aptdata scene variable
     """
     props = context.scene.pos_panel_props
+    pospath = props.pos_filename
+    rngpath = props.rng_filename
 
     try:
-        data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
-        print("Loaded rng data: ", data.atomlist) # DEBUG
+        data = APTloader.ReadAPTData(pospath, rngpath)
+        print("Loaded rng data: ", data.atomlist)
         self.report({'INFO'}, "Loaded %s as POS, %s as RNG" % \
                 (props.pos_filename, props.rng_filename))
     except APTloader.APTReadError:
@@ -298,9 +299,4 @@ def load_posrng(self, context):
     # Add reference to scene.aptdata
     dataname = ntpath.basename(props.pos_filename)
     context.scene.aptdata[dataname] = data
-
-    # separate ion names and index refs for data.getion
-    print("--- ATOMLIST", data.atomlist)
-    print("--- RNGLIST", data.rnglist)
-    print("--- IONLIST", data.ionlist)
     return {'FINISHED'}
