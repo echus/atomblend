@@ -13,6 +13,7 @@
 
 import bpy
 import numpy as np
+import ntpath
 
 from .aptread import APTloader
 from . import blend
@@ -280,9 +281,9 @@ def bake(self, context):
     return {'FINISHED'}
 
 def load_posrng(self, context):
-    # Load APT pos/rng data
-    # called by: load_posrng_button operator
-    # populates props.atomlist collection property with atoms in rng file
+    """
+    Load APT pos/rng data to aptdata scene variable
+    """
     props = context.scene.pos_panel_props
 
     try:
@@ -293,6 +294,10 @@ def load_posrng(self, context):
     except APTloader.APTReadError:
         self.report({'ERROR'}, "Error reading pos or rng file. Double check file names.")
         return {'CANCELLED'}
+
+    # Add reference to scene.aptdata
+    dataname = ntpath.basename(props.pos_filename)
+    context.scene.aptdata[dataname] = data
 
     # separate ion names and index refs for data.getion
     print("--- ATOMLIST", data.atomlist)

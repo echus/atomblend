@@ -20,7 +20,7 @@ DEFAULT_COLOR = (0, 0.144, 0.554)
 
 # === Global scene properties ===
 # Array for APTloader objects
-bpy.types.Scene.aptdata = []
+bpy.types.Scene.aptdata = {}
 
 # === Custom AtomBlend object RNA properties ===
 # Define AtomBlend-specific RNA props for every object
@@ -69,6 +69,15 @@ class VIEW3D_PT_pos_panel_props(PropertyGroup):
             description = "Input .rng file",
             default = "/"
         )
+
+    # Function to return aptdata enum from current context
+    def aptdata_enum(self, context):
+        items = []
+        for key in context.scene.aptdata:
+            items.append((key, key, key))
+        return items
+
+    file_list = EnumProperty(name="File", items=aptdata_enum)
 
     plot_options = [('EA', "Atomic", "Atomic"), ('ION', "Ionic", "Ionic"), ('ISO', "Isotopic", "Isotopic")]
     plot_type = EnumProperty(name="Bake options", items=plot_options)

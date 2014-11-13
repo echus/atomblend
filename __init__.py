@@ -93,6 +93,8 @@ class VIEW3D_PT_data_bake(ImportPanel, Panel):
         col.operator("atomblend.load_posrng")
 
         col = layout.column(align=True)
+        col.label(text="Select file and plot type:")
+        col.prop(props, "file_list", text="")
         col.prop(props, "plot_type", text="")
         col.operator("atomblend.bake_button")
 
