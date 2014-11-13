@@ -237,25 +237,25 @@ def clear(self, context):
 def bake(self, context):
     """Draws currently selected pos file"""
     props = context.scene.pos_panel_props
-    fn = props.file_list        # Name of pos file to load
+    aptname = props.file_list        # Name of pos file to load
     plot_type = props.plot_type # Atomic/Ionic/Isotopic
 
-    if fn:
-        data = context.scene.aptdata[fn]
+    if aptname:
+        data = context.scene.aptdata[aptname]
     else:
         self.report({'ERROR'}, "No files loaded yet")
         return {'CANCELLED'}
 
     if plot_type == 'ISO':
-        groupname = fn+" isotopic"
+        groupname = aptname+" isotopic"
         listfunc = "rnglist"
         getfunc = "getrng"
     elif plot_type == 'EA':
-        groupname = fn+" atomic"
+        groupname = aptname+" atomic"
         listfunc = "atomlist"
         getfunc = "getatom"
     elif plot_type == 'ION':
-        groupname = fn+" ionic"
+        groupname = aptname+" ionic"
         listfunc = "ionlist"
         getfunc = "getion"
 
@@ -274,15 +274,19 @@ def bake(self, context):
     grp = blend.space.group_add(groupname)
 
     # Draw all meshes in pointlist and link to group
-    for name, verts in zip(namelist, pointlist):
+    for ind, (name, verts) in enumerate(zip(namelist, pointlist)):
         obj = blend.object.object_add_from_verts(verts, name, trunc=None)
         obj.datatype = 'DATA'
+        obj.aptname  = aptname
+        obj.aptfunc  = getfunc
+        obj.atomname = name
+        obj.atomind  = str(ind)
         blend.space.group_add_object(grp, obj)
 
     # centre view on created group
     blend.space.view_selected_group(groupname)
 
-    self.report({'INFO'}, "Loaded %s data into %s group" % (fn, groupname))
+    self.report({'INFO'}, "Loaded %s data into %s group" % (aptname, groupname))
     return {'FINISHED'}
 
 def load_posrng(self, context):

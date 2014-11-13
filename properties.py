@@ -13,7 +13,8 @@
 import bpy
 
 from bpy.types import PropertyGroup
-from bpy.props import BoolProperty, StringProperty, EnumProperty, FloatProperty, FloatVectorProperty
+from bpy.props import BoolProperty, StringProperty, EnumProperty, \
+                      FloatProperty, FloatVectorProperty
 
 # TODO this should go in some global settings module
 DEFAULT_COLOR = (0, 0.144, 0.554)
@@ -35,6 +36,12 @@ bpy.types.Object.datatype = EnumProperty(
         items = dtypes,
         default = 'BLENDER'
         )
+
+# Associate APTloader information with loaded object
+bpy.types.Object.aptname  = StringProperty()
+bpy.types.Object.aptfunc  = StringProperty()
+bpy.types.Object.atomname = StringProperty()
+bpy.types.Object.atomind  = StringProperty()
 
 # Type of visualisation applied
 vtypes = [('NONE',  "None",  "None"),
@@ -79,7 +86,9 @@ class VIEW3D_PT_pos_panel_props(PropertyGroup):
 
     file_list = EnumProperty(name="File", items=aptdata_enum)
 
-    plot_options = [('EA', "Atomic", "Atomic"), ('ION', "Ionic", "Ionic"), ('ISO', "Isotopic", "Isotopic")]
+    plot_options = [('EA',  "Atomic",   "Atomic"  ), \
+                    ('ION', "Ionic",    "Ionic"   ), \
+                    ('ISO', "Isotopic", "Isotopic")]
     plot_type = EnumProperty(name="Bake options", items=plot_options)
 
     # Boundbox padding
