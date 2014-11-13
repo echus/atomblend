@@ -240,7 +240,11 @@ def bake(self, context):
     fn = props.file_list        # Name of pos file to load
     plot_type = props.plot_type # Atomic/Ionic/Isotopic
 
-    data = context.scene.aptdata[fn]
+    if fn:
+        data = context.scene.aptdata[fn]
+    else:
+        self.report({'ERROR'}, "No files loaded yet")
+        return {'CANCELLED'}
 
     if plot_type == 'ISO':
         groupname = fn+" isotopic"
@@ -277,6 +281,8 @@ def bake(self, context):
 
     # centre view on created group
     blend.space.view_selected_group(groupname)
+
+    self.report({'INFO'}, "Loaded %s data into %s group" % (fn, groupname))
     return {'FINISHED'}
 
 def load_posrng(self, context):
