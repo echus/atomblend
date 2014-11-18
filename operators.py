@@ -126,7 +126,7 @@ class VIEW3D_OT_dupli_vert(Operator):
     def execute(self, context):
         return opexec.dupli_vert(self, context)
 
-class VIEW3D_OT_add_halo_material(Operator):
+class VIEW3D_OT_add_halomat(Operator):
     """Apply halo material to currently selected object"""
     bl_idname = "atomblend.add_halomat"
     bl_label = "Add halo material"
