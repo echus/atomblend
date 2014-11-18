@@ -15,7 +15,7 @@ import bpy
 import numpy as np
 import ntpath
 
-from .aptread import APTloader
+from .aptread import aptload
 from . import blend
 from . import analysis
 
@@ -27,7 +27,7 @@ def analysis_isosurface_gen(self, context):
     # Get user specified isorange
     isorange = [props.analysis_isosurf_rangefrom, props.analysis_isosurf_rangeto]
     # FIXME don't load this again!!! save as global var for now?
-    data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
+    data = aptload.ReadAPTData(props.pos_filename, props.rng_filename)
 
     print("Calculating voxelisation")
     voxarray = analysis.voxelisation.generate(data.xyz)
@@ -46,7 +46,7 @@ def animation_add(self, context):
     # Get POS xyz data
     props = context.scene.pos_panel_props
     # FIXME don't load this again!!! save as global var for now?
-    data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
+    data = aptload.ReadAPTData(props.pos_filename, props.rng_filename)
     data_centre = np.average(data.xyz, axis=0)
 
     # Set camera location and offset from dataset (user)
@@ -93,7 +93,7 @@ def add_bounding_box(self, context):
     #padding = self.padding
 
     # FIXME don't load this again!!! save as global var for now?
-    data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
+    data = aptload.ReadAPTData(props.pos_filename, props.rng_filename)
 
     pointlist = data.xyz
     xyzmax = np.amax(pointlist, axis=0) # max locations in data
@@ -298,11 +298,11 @@ def load_posrng(self, context):
     rngpath = props.rng_filename
 
     try:
-        data = APTloader.ReadAPTData(pospath, rngpath)
+        data = aptload.ReadAPTData(pospath, rngpath)
         print("Loaded rng data: ", data.atomlist)
         self.report({'INFO'}, "Loaded %s as POS, %s as RNG" % \
                 (props.pos_filename, props.rng_filename))
-    except APTloader.APTReadError:
+    except aptload.APTReadError:
         self.report({'ERROR'}, "Error reading pos or rng file. Double check file names.")
         return {'CANCELLED'}
 
