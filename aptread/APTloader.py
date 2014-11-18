@@ -1,42 +1,39 @@
-#----------------------------------------------------------
-# APTloader.py
-#----------------------------------------------------------
+# =============================================================================
+# (C) Copyright 2014
+# Australian Centre for Microscopy & Microanalysis
+# The University of Sydney
+# =============================================================================
+# File:   aptload.py
+# Date:   2014-07-01
 # Author: Varvara Efremova
-# Date: 14 April 2014
-# Copyright (c) 2014 Australian Centre for Microscopy & Microanalysis (ACMM), The University of Sydney, NSW 2006 Australia. All rights reserved.
-
-# TODO proper docstrings!!
+#
+# Description:
+# APT pos/rng loader class
+# =============================================================================
 
 from __future__ import print_function
 
 import numpy as np
 
-# TODO this only works when run from inside blender/outside package
-# - what's a better way of referencing modules within a package?
-#import POSloader as pl
-#import ORNLRNGloader as rl
-from . import POSloader as pl
-from . import ORNLRNGloader as rl
+from . import posload as pl
+from . import rngload as rl
 
-""" Helper functions """
+# Helper functions
 def _unique_rows(a):
-    # Helper function: returns unique rows in np 2d array
+    # Returns unique rows in numpy 2D array
     a = np.ascontiguousarray(a)
     unique_a = np.unique(a.view([('', a.dtype)]*a.shape[1]))
     return unique_a.view(a.dtype).reshape((unique_a.shape[0], a.shape[1]))
 
-""" Exceptions """
+# Exceptions
 class APTReadError(Exception): pass
 class InvalidRngError(Exception): pass
 class InvalidIndexError(Exception): pass
 
-""" Class defs """
-# read in complete pos + rng info
 class ReadAPTData():
-    """ TODO:
+    """ ReadAPTData
 
-    Docs here?
-    !!!
+    Read in complete pos and rng info from files
     """
     def __init__(self, pos_fn, rng_fn):
         try:

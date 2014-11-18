@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
-from APTloader import ReadAPTData
+from aptload import ReadAPTData
 
 #pos_fn = raw_input('Enter pos filename: ')
 #rng_fn = raw_input('Enter rng filename: ')

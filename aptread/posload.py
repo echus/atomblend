@@ -1,21 +1,28 @@
-# POSloader.py
-# ReferenceImplementationPython
+# =============================================================================
+# (C) Copyright 2014
+# Australian Centre for Microscopy & Microanalysis
+# The University of Sydney
+# =============================================================================
+# File:   posload.py
+# Date:   2014-07-01
+# Author: Varvara Efremova
 #
-# Author: Anna Ceguerra
-# Date: 4 March 2013
-# Copyright (c) 2013 Australian Centre for Microscopy & Microanalysis (ACMM), The University of Sydney, NSW 2006 Australia. All rights reserved.
+# Description:
+# POS file loader
+# =============================================================================
 
 import numpy as np
+
 class ReadError(Exception): pass
 
 class ReadPos():
     def __init__(self, pos_fn):
         self.numpts, self.xyz, self.mc = self.loadfile(pos_fn)
 
-    # read in pos file
     # TODO more informative errors
     # TODO check it's actually a pos file
     def loadfile(self, fn):
+        """Read posfile at path fn"""
         try:
             with open(fn, 'rb') as content_file:
                 pos_raw = content_file.read()

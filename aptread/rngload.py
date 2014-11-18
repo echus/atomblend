@@ -1,13 +1,19 @@
-# ORNLRNGloader.py
-# ReferenceImplementationPython
+# =============================================================================
+# (C) Copyright 2014
+# Australian Centre for Microscopy & Microanalysis
+# The University of Sydney
+# =============================================================================
+# File:   rngload.py
+# Date:   2014-07-01
+# Author: Varvara Efremova
 #
-# Authors: Anna Ceguerra, Varvara Efremova
-# Date: 14 April 2014
-# Copyright (c) 2014 Australian Centre for Microscopy & Microanalysis (ACMM), The University of Sydney, NSW 2006 Australia. All rights reserved.
+# Description:
+# Sample header to use in AtomBlend projects.
+# =============================================================================
 
 import numpy as np
 
-# default null_atom value
+# Default null_atom value
 NULL_ATOM = np.array(['', '', '', ''])
 
 class ReadError(Exception): pass
@@ -23,18 +29,18 @@ class ReadRng():
     ions_b = 3
 
     def __init__(self, rng_fn, null_atom=NULL_ATOM):
-        # read rng file info
+        # Read rng file info
         self.rng, self.rngcomp, self.numrngs, self.atominfo, self.numatoms = self.loadfile(rng_fn)
 
-        # set default null_atom value (to be returned for any atoms
+        # Set default null_atom value (to be returned for any atoms
         # that don't match ranges in the rngfile)
         self.null_atom = null_atom
 
         # TODO add function that returns atominfo shape (eg 1x4)
 
-    # reading in ORNL rng file
     # TODO check it's a rng file (avoid utf-8 encoding errors)
     def loadfile(self, fn):
+        """Reads and returns parsed rng file"""
         try:
             with open(fn, 'r') as file:
                 r = [v.split() for v in file]
