@@ -1,1 +1,1 @@
-__all__ = ["APTloader", "POSloader", "ORNLRNGloader"]
+__all__ = ["aptload", "posload", "rngload"]
