@@ -60,15 +60,15 @@ class AtomBlendPanel():
 
 class ImportPanel(AtomBlendPanel):
     """Mixin for import/data load panel"""
-    bl_category = "Import"
+    bl_category = "AP Import"
 
 class VisualisationPanel(AtomBlendPanel):
     """Mixin parent class for common properties"""
-    bl_category = "Visualisation"
+    bl_category = "AP Visualisation"
 
 class AnalysisPanel(AtomBlendPanel):
     """Mixin parent class for common properties"""
-    bl_category = "Analysis"
+    bl_category = "AP Analysis"
 
 
 
