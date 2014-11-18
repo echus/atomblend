@@ -37,7 +37,7 @@ bpy.types.Object.datatype = EnumProperty(
         default = 'BLENDER'
         )
 
-# Associate APTloader information with loaded object
+# Properties for associated APTloader information (only on datatype=DATA objs)
 bpy.types.Object.aptname  = StringProperty()
 bpy.types.Object.aptfunc  = StringProperty()
 bpy.types.Object.atomname = StringProperty()
