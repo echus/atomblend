@@ -28,9 +28,9 @@ class ReadRng():
     ions_g = 2
     ions_b = 3
 
-    def __init__(self, rng_fn, null_atom=NULL_ATOM):
+    def __init__(self, rng_path, null_atom=NULL_ATOM):
         # Read rng file info
-        self.rng, self.rngcomp, self.numrngs, self.atominfo, self.numatoms = self.loadfile(rng_fn)
+        self.loadfile(rng_path)
 
         # Set default null_atom value (to be returned for any atoms
         # that don't match ranges in the rngfile)
@@ -39,28 +39,96 @@ class ReadRng():
         # TODO add function that returns atominfo shape (eg 1x4)
 
     # TODO check it's a rng file (avoid utf-8 encoding errors)
-    def loadfile(self, fn):
+    def loadfile(self, path):
         """Reads and returns parsed rng file"""
+
         try:
-            with open(fn, 'r') as file:
+            with open(path, 'r') as file:
                 r = [v.split() for v in file]
         except (IOError, FileNotFoundError):
-            raise ReadError('Error opening rng file %s' % fn)
+            raise ReadError('Error opening rng file %s' % path)
             return
 
-        numions = int(r[0][0])
-        numrngs = int(r[0][1])
-        end = int((1+numions)*2)
-        # shortname + colour (3 floats)
-        ions = np.array(r[2:end:2])
-        rngs = r[int(end):int(end+numrngs)] # ranges
+        # Data pre-processing
+        natoms, nrngs, rngs, atominfo, rngcomp = self._read(r)
+        self.natoms, self.nrngs = natoms, nrngs
 
-        # read rows as np strings
-        rngsconv = np.array(rngs, dtype='S10')
+        # Parse raw rng data into dicts
+        self.rangedict, self.atomdict = self._parse(rngs, atominfo, rngcomp)
+        return
 
-        # extract ranges as floats, ion composition as bool
-        rng = rngsconv[:,1:3].astype('f8') # extract only range
-        rngatoms = rngsconv[:,3:3+numions].astype('b') # extract array of atoms in range
+    def _read(self, r):
+        """ Read range data from file
 
-        return rng, rngatoms, numrngs, ions, numions
+        Input:
+        r        : raw split() file input
+
+        Output:
+        natoms   : number of atoms
+        nrngs    : number of ranges
+        rngs     : 2 column array of ranges (min, max)
+        atominfo : 4 column array of atoms (name, R, G, B)
+        rngcomp  : composition array
+        """
+
+        natoms = int(r[0][0])         # Total number of atoms
+        nrngs  = int(r[0][1])          # Total number of rngs
+
+        endrow = int((1+natoms)*2)    # rngfile end row
+
+        # Extract raw rng data
+        atominfo = np.array(r[2:endrow:2])        # All atom shortnames and
+                                                  # colours
+                                                  # Columns [name, R, G, B]
+
+        rawrngs = r[int(endrow):int(endrow+nrngs)] # Raw ranges
+        rngsconv = np.array(rawrngs, dtype='S10') # Rows as numpy strings
+
+        rngs = rngsconv[:,1:3].astype('f8') # Extract ranges
+        rngcomp = rngsconv[:,3:3+natoms].astype('b') # Extract array of atoms in range
+
+        return natoms, nrngs, rngs, atominfo, rngcomp
+
+
+    def _parse(self, rngs, atominfo, rngcomp):
+        """ Parse raw range data into dicts
+
+        Input:
+        rngs      : 2 column array of ranges (min, max)
+        atominfo  : 4 column array of atoms (name, R, G, B)
+        rngcomp   : composition array
+
+        Returns:
+        rangedict : (min m/c, max m/c) -> (matching atoms)
+        atomdict  : (str) atom name -> (R, G, B) atom colour
+        """
+        rangedict = {}
+        atomdict = {}
+
+        # Populate rangedict
+        for i, rng in enumerate(rngs):
+            comp = rngcomp[i]                   # Range composition
+
+            atominds = np.nonzero(comp)[0]      # Inds of atoms in range
+            atoms = atominfo[atominds,0]        # Atoms in range with colours
+
+            rangedict[tuple(rng)] = tuple(atoms)
+
+        # Populate atomdict
+        for atom in atominfo:
+            atomdict[atom[0]] = (atom[1], atom[2], atom[3])
+
+        print(rangedict)
+        print(atomdict)
+        return rangedict, atomdict
+
+
+
+# Helper functions
+def _unique_rows(a):
+    # Returns unique rows in numpy 2D array
+    a = np.ascontiguousarray(a)
+    unique_a = np.unique(a.view([('', a.dtype)]*a.shape[1]))
+    return unique_a.view(a.dtype).reshape((unique_a.shape[0], a.shape[1]))
+
 
