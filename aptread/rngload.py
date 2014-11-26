@@ -43,10 +43,43 @@ class ReadRng():
         # Data pre-processing
         natoms, nrngs, rngsraw, atomsraw, rngcomp = self._read(r)
         self.natoms, self.nrngs = natoms, nrngs
-
         # Parse raw rng data into dicts
-        self.ranges, self.atoms = self._parse(rngsraw, atomsraw, rngcomp)
+        self.ranges, self.colours = self._parse(rngsraw, atomsraw, rngcomp)
         return
+
+
+
+    def getatoms(self, mc):
+        """
+        Returns tuple of atoms matching the given m/c.
+        Returns None for an unranged m/c.
+        """
+
+        # Note: assumes there are no overlapping ranges
+        # This should be checked upon loading the range file
+        for rng, atoms in self.ranges:
+            if (mc > rng[0]) & (mc < rng[1]):
+                return atoms
+        return None
+
+    def getion(self, mc):
+        """
+        Returns ion name matching the given m/c.
+        Returns None for an unranged m/c.
+        """
+
+        for rng, atoms in self.ranges:
+            if (mc > rng[0]) & (mc < rng[1]):
+                return "".join(atoms)
+        return None
+
+    def getisotope(self, mc):
+        return
+
+    def getcolour(self, atomname):
+        return self.colours[atomname]
+
+
 
     def _read(self, r):
         """ Read range data from file
