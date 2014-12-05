@@ -50,14 +50,17 @@ class ReadAPTData():
         self.pospath = pospath
         self.rngpath = rngpath
 
+    @property
     def ions(self):
-        return
+        return self._rng.ionlist
 
+    @property
     def atoms(self):
-        return
+        return self._rng.atomlist
 
+    @property
     def ranges(self):
-        return
+        return self._rng.rnglist
 
     def getrng(self, rngid):
         """ Returns all xyz points in the selected range reference.
@@ -69,6 +72,9 @@ class ReadAPTData():
         Returns:
         numpy 2D array of xyz points
         """
+
+        # TODO need to complete getrng function in rngload.py
+
         return
 
     def getion(self, ion):
@@ -78,7 +84,17 @@ class ReadAPTData():
         ionind -- index of the ion in self.ionlist
         """
 
-        return
+        # TODO optimisation
+        xyz = []
+
+        for i, point in self._pos.xyz:
+            mc  = self._pos.mc[i]
+            testion = getion(mc)
+
+            if testion == ion:
+                xyz.append(point)
+
+        return xyz
 
     def getatom(self, atom):
         """ Returns all points that match the selected atom.

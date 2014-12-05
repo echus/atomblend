@@ -75,11 +75,13 @@ class RNG(RangeLoader):
         return
 
 
+    @property
     def atomlist(self):
         """Return list of all atoms in rangefile"""
         atomlist = list(self.colours.keys())
         return atomlist
 
+    @property
     def ionlist(self):
         """Return list of all ions in rangefile"""
         ions = []
@@ -92,6 +94,7 @@ class RNG(RangeLoader):
 
         return ionlist
 
+    @property
     def rnglist(self):
         """Return list of all ranges in rangefile"""
         # NOTE currently a list of range tuples
@@ -129,7 +132,7 @@ class RNG(RangeLoader):
                 return "".join(atoms)
         return None
 
-    def getisotope(self, mc):
+    def getrng(self, mc):
         """Return isotope matching the given m/c"""
         # TODO
         return
@@ -201,8 +204,6 @@ class RNG(RangeLoader):
         for atom in atomsraw:
             atoms[atom[0]] = (atom[1], atom[2], atom[3])
 
-        print(ranges)
-        print(atoms)
         return ranges, atoms
 
 
