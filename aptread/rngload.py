@@ -40,6 +40,15 @@ class RangeLoader():
     def getcolour(self, atomname):
         return
 
+    def atomlist(self):
+        return
+
+    def ionlist(self):
+        return
+
+    def rnglist(self):
+        return
+
 
 
 # === Concrete rangefile loader classes ===
@@ -60,9 +69,39 @@ class RNG(RangeLoader):
         # Data pre-processing
         natoms, nrngs, rngsraw, atomsraw, rngcomp = self._read(r)
         self.natoms, self.nrngs = natoms, nrngs
-        # Parse raw rng data into dicts
+
+        # Parse raw rng data into lists
         self.ranges, self.colours = self._parse(rngsraw, atomsraw, rngcomp)
         return
+
+
+    def atomlist(self):
+        """Return list of all atoms in rangefile"""
+        atomlist = list(self.colours.keys())
+        return atomlist
+
+    def ionlist(self):
+        """Return list of all ions in rangefile"""
+        ions = []
+        for line in self.ranges:
+            atoms = line[1]
+            ions.append(atoms)
+
+        # Remove duplicates
+        ionlist = list(set(ions))
+
+        return ionlist
+
+    def rnglist(self):
+        """Return list of all ranges in rangefile"""
+        # NOTE currently a list of range tuples
+        # referenced by "rngid" = index in list
+        # There is possibly a better way to do this
+
+        rnglist = []
+        for line in self.ranges:
+            rnglist.append(line[0])
+        return rnglist
 
 
 

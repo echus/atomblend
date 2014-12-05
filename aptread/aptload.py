@@ -35,73 +35,31 @@ class ReadAPTData():
 
     Read in complete pos and rng info from files
     """
-    def __init__(self, pos_fn, rng_fn):
+    def __init__(self, pospath, rngpath):
         try:
-            self._posfile = pl.ReadPos(pos_fn)
+            self._pos = pl.POS(pospath)
         except pl.ReadError:
             raise APTReadError('Error opening pos file %s' % pos_fn)
             return
         try:
-            self._rngfile = rl.ReadRng(rng_fn)
+            self._rng = rl.RNG(rngpath)
         except rl.ReadError:
             raise APTReadError('Error opening rng file %s' % rng_fn)
             return
 
-        self.numpts = self._posfile.numpts
-        self.mc = self._posfile.mc
-        self.xyz = self._posfile.xyz
+        self.pospath = pospath
+        self.rngpath = rngpath
 
-        self.rngcomp = self._rngfile.rngcomp
-        self.atominfo = self._rngfile.atominfo
+    def ions(self):
+        return
 
-        self.rnglist = self._rngfile.rng
-        self.atomlist = self._rngfile.atominfo[:,0]
-        self._calc_ionlist() # TODO ionlist is preallocated within the function ...?
+    def atoms(self):
+        return
 
-        # populate array mapping points to rngs
-        # TODO should I preallocate self.rngmap here or within the function??
-        self.rngmap = np.zeros(self.mc.shape)
-        self._calc_rngmap()
+    def ranges(self):
+        return
 
-    # TODO preallocate self.rngmap within this func
-    def _calc_rngmap(self):
-        # populate rngmap array, mapping xyz posfile points to respective ranges
-        # rngmap must be initialised to size of posfile before this is called   mcarray = self.mc
-        rngmap = self.rngmap
-        for rngind, rng in enumerate(self.rnglist):
-            rng = self.rnglist[rngind,:]
-            # rngarray: 1 where mc matches current range, 0 where not
-            rngarray = ((self.mc > rng[0]) & (self.mc < rng[1])).astype(int)
-            rngarray *= (rngind + 1) # add one to differentiate between 0 indeces and
-                                     # unranged points
-            rngmap += rngarray
-
-    def _calc_ionlist(self):
-        # populate ionlist array
-        # 2d array with cols: (ion string ID, index ref to self.rnglist)
-        boolcomp = self.rngcomp.astype(bool)
-        ions = _unique_rows(boolcomp)
-
-        # get rnglist indices corresponding to the unique ions
-        ioninds = np.zeros(ions.shape[0])
-        for i, ion in enumerate(ions):
-            # inds: all indices in rnglist/rngcomp corresponding to current ion
-            inds = np.where((boolcomp == ion).all(axis=1))[0]
-            ioninds[i] = int(inds[0])
-
-        self.ionlist = np.zeros(ions.shape[0], dtype=self.atomlist.dtype)  # human-readable ion names
-        self._ioninds = np.zeros(ions.shape[0], dtype='i8') # ion references by range index
-                                                             # for use in getion
-
-        # generate unique human-readable string ids for each ion
-        for i, (ion, ind) in enumerate(zip(ions, ioninds)):
-            atoms = self.atomlist[ion]
-            ionid = "".join(atoms)
-            self.ionlist[i] = ionid
-            self._ioninds[i] = int(ind)
-
-    # TODO find a cleaner way to vectorize this?
-    def getrng(self, rngind):
+    def getrng(self, rngid):
         """ Returns all xyz points in the selected range reference.
 
         Arguments:
@@ -111,49 +69,22 @@ class ReadAPTData():
         Returns:
         numpy 2D array of xyz points
         """
-        # rngind indexing starts from 1 internally
-        # 0 points in rngmap are unranged points
-        rngind += 1
-        ind = np.zeros(self.mc.shape, dtype=bool)
-        if isinstance(rngind, int):
-            ind = (self.rngmap == rngind)
-        elif isinstance(rngind, list) or isinstance(rngind, np.ndarray):
-            for ri in rngind:
-                ind = np.logical_xor(ind, (self.rngmap == ri))
-        else:
-            raise InvalidRngError('APTloader.getrng input "rngind" is not a valid int or list')
-            return None
-        return self.xyz[ind]
+        return
 
-    def getion(self, ionind):
+    def getion(self, ion):
         """ Returns all points that match the selected ion.
 
         Arguments:
         ionind -- index of the ion in self.ionlist
         """
-        ionref = self._ioninds[ionind] # get reference index to ion in rng array
 
-        # select all ranges that match the given ion's compositions
-        boolcomp = self.rngcomp.astype(bool)
-        ion = boolcomp[ionref]
+        return
 
-        # select rows in boolcomp that match ion
-        # ie the ranges that match the ion composition
-        # self.rngcomp[boolind] are the matching rng compositions
-        boolind = (boolcomp == ion).all(axis=1)
-        rngind = boolind.nonzero()[0]
-        return self.getrng(rngind)
-
-    # atomind indexing starts from 0
-    # returns all points that match selected atom
-    # calls:
-    #   self.getrng
-    def getatom(self, atomind):
+    def getatom(self, atom):
         """ Returns all points that match the selected atom.
 
         Arguments:
         atomind -- index of the atom in self.atomlist
         """
-        # TODO check for out of bounds atomind, throw error, or catch invalid index error?
-        rngind = self.rngcomp[:,atomind].nonzero()[0]
-        return self.getrng(rngind)
+
+        return
