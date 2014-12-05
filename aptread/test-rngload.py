@@ -2,13 +2,13 @@
 
 import os.path
 
-from rngload import ReadRng
+from rngload import RNG
 
 PATH = "../data/test.rng"
 
 path = os.path.abspath(PATH)
 
-rngfile = ReadRng(path)
+rngfile = RNG(path)
 #print "ranges:", rngfile.rng
 #print "range atoms/rngcomp:", rngfile.rngcomp
 #print "ions/atominfo:", rngfile.atominfo

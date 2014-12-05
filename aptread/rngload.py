@@ -8,26 +8,43 @@
 # Author: Varvara Efremova
 #
 # Description:
-# Sample header to use in AtomBlend projects.
+# Rangefile loader definitions
 # =============================================================================
 
 import numpy as np
 
-# Default null_atom value
-NULL_ATOM = np.array(['', '', '', ''])
-
 class ReadError(Exception): pass
 
-class ReadRng():
-    def __init__(self, rng_path, null_atom=NULL_ATOM):
-        # Read rng file info
-        self.loadfile(rng_path)
+# === Rangefile loader interface definition ===
+class RangeLoader():
+    """
+    Abstract interface definition for rangefile loader classes
+    Each rangefile loader must implement these functions
+    """
 
-        # Set default null_atom value (to be returned for any atoms
-        # that don't match ranges in the rngfile)
-        self.null_atom = null_atom
+    def __init__(self, path):
+        self.loadfile(path)
 
-        # TODO add function that returns atomsraw shape (eg 1x4)
+    def loadfile(self, path):
+        return
+
+    def getatoms(self, mc):
+        return
+
+    def getion(self, mc):
+        return
+
+    def getisotope(self, mc):
+        return
+
+    def getcolour(self, atomname):
+        return
+
+
+
+# === Concrete rangefile loader classes ===
+class RNG(RangeLoader):
+    """.rng loader definition"""
 
     # TODO check it's a rng file (avoid utf-8 encoding errors)
     def loadfile(self, path):
@@ -74,6 +91,8 @@ class ReadRng():
         return None
 
     def getisotope(self, mc):
+        """Return isotope matching the given m/c"""
+        # TODO
         return
 
     def getcolour(self, atomname):
