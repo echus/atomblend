@@ -10,3 +10,12 @@ data = ReadAPTData(pospath, rngpath)
 ionlist = data.ions
 
 print("Ion list:", ionlist)
+print()
+
+ion = ionlist[3]
+print("Ion:", ion)
+print()
+
+xyz = data.getion(ion)
+print("XYZ:", len(xyz))
+print(xyz[0:10])

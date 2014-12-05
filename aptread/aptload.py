@@ -87,9 +87,9 @@ class ReadAPTData():
         # TODO optimisation
         xyz = []
 
-        for i, point in self._pos.xyz:
+        for i, point in enumerate(self._pos.xyz):
             mc  = self._pos.mc[i]
-            testion = getion(mc)
+            testion = self._rng.getion(mc)
 
             if testion == ion:
                 xyz.append(point)
