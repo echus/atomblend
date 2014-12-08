@@ -50,6 +50,9 @@ class ReadAPTData():
         self.pospath = pospath
         self.rngpath = rngpath
 
+    def __len__(self):
+        return len(self._pos.xyz)
+
     @property
     def ions(self):
         return self._rng.ionlist
@@ -87,12 +90,11 @@ class ReadAPTData():
         # TODO optimisation
         xyz = []
 
-        for i, point in enumerate(self._pos.xyz):
-            mc  = self._pos.mc[i]
+        for i, mc in enumerate(self._pos.mc):
             testion = self._rng.getion(mc)
 
             if testion == ion:
-                xyz.append(point)
+                xyz.append(self._pos.xyz[i])
 
         return xyz
 

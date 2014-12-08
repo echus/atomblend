@@ -17,5 +17,6 @@ print("Ion:", ion)
 print()
 
 xyz = data.getion(ion)
-print("XYZ:", len(xyz))
+print("Total XYZ:", len(data))
+print("Ion XYZ:", len(xyz))
 print(xyz[0:10])
