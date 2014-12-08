@@ -24,6 +24,8 @@ class RangeLoader():
 
     def __init__(self, path):
         self.loadfile(path)
+        self.natoms = None
+        self.nranges = None
 
     def loadfile(self, path):
         return
@@ -90,7 +92,8 @@ class RNG(RangeLoader):
             ions.append(atoms)
 
         # Remove duplicates
-        ionlist = list(set(ions))
+        ionlist = np.unique(ions)
+        #ionlist = list(set(ions))
 
         return ionlist
 
@@ -129,7 +132,7 @@ class RNG(RangeLoader):
 
         for rng, atoms in self.ranges:
             if (mc > rng[0]) & (mc < rng[1]):
-                return "".join(atoms)
+                return atoms
         return None
 
     def getrng(self, mc):
