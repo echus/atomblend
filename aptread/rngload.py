@@ -96,7 +96,6 @@ class RNG(RangeLoader):
 
         # Remove duplicates
         ionlist = np.unique(ions)
-        #ionlist = list(set(ions))
 
         return ionlist
 
@@ -184,28 +183,28 @@ class RNG(RangeLoader):
         """ Parse raw range data into dicts
 
         Input:
-        rngs      : 2 column array of ranges (min, max)
+        rngsraw   : 2 column array of ranges (min, max)
         atomsraw  : 4 column array of atoms (name, R, G, B)
         rngcomp   : composition array
 
         Returns:
-        rangedict : (min m/c, max m/c) -> (matching atoms)
-        atomdict  : (str) atom name -> (R, G, B) atom colour
+        ranges : [(min m/c, max m/c), (matching atoms)] (nrngs x 2 np array)
+        atoms  : (str) atom name -> (R, G, B) atom colour (natoms x dict)
         """
-        ranges = []
+        ranges = np.zeros((self.nrngs, 2), dtype=object)
         atoms = {}
 
-        # Populate rangedict
+        # Populate ranges
         for i, rng in enumerate(rngsraw):
             comp = rngcomp[i]                   # Range composition
 
             atominds = np.nonzero(comp)[0]      # Inds of atoms in range
-            rngatoms = atomsraw[atominds,0]        # Atoms in range with colours
+            rngatoms = atomsraw[atominds,0]     # Atoms in range with colours
 
-            rangetuple = (tuple(rng), tuple(rngatoms))
-            ranges.append(rangetuple)
+            ranges[i][0] = tuple(rng)
+            ranges[i][1] = tuple(rngatoms)
 
-        # Populate atomdict
+        # Populate atoms dict
         for atom in atomsraw:
             atoms[atom[0]] = (atom[1], atom[2], atom[3])
 
