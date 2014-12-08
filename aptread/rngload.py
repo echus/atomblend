@@ -176,6 +176,7 @@ class RNG(RangeLoader):
 
     def _parse(self, rngsraw, atomsraw, rngcomp):
         """ Parse raw range data into dicts
+        Run after self._read()
 
         Input:
         rngsraw   : 2 column array of ranges (min, max)
