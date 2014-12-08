@@ -74,17 +74,20 @@ class RNG(RangeLoader):
 
         # Parse raw rng data into lists
         self.ranges, self.colours = self._parse(rngsraw, atomsraw, rngcomp)
+
+        # Generate atom, ion, rng lists
+        self.atomlist = self.genatomlist()
+        self.ionlist = self.genionlist()
+        self.rnglist = self.genrnglist()
         return
 
 
-    @property
-    def atomlist(self):
+    def genatomlist(self):
         """Return list of all atoms in rangefile"""
         atomlist = list(self.colours.keys())
         return atomlist
 
-    @property
-    def ionlist(self):
+    def genionlist(self):
         """Return list of all ions in rangefile"""
         ions = []
         for line in self.ranges:
@@ -97,8 +100,7 @@ class RNG(RangeLoader):
 
         return ionlist
 
-    @property
-    def rnglist(self):
+    def genrnglist(self):
         """Return list of all ranges in rangefile"""
         # NOTE currently a list of range tuples
         # referenced by "rngid" = index in list
