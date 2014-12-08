@@ -122,15 +122,14 @@ class RNG(RangeLoader):
         """
         # TODO raise error if test mc matches more than one range
 
-        match = (mc > self.ranges['mcl']) & (mc < self.ranges['mcu'])
+        # Use self.rnglist (not self.ranges) for slightly faster access
+        match = (mc > self.rnglist[:,0]) & (mc < self.rnglist[:,1])
+
         if match.any():
             ion = self.ranges['atoms'][match][0]
             return ion
         else:
             return None
-
-        #    if (mc > rng[0]) & (mc < rng[1]):
-        return None
 
     def getrng(self, mc):
         """Return isotope matching the given m/c"""

@@ -87,12 +87,10 @@ class ReadAPTData():
         ionind -- index of the ion in self.ionlist
         """
 
-        # TODO optimisation
         xyz = []
 
         for i, mc in enumerate(self._pos.mc):
             testion = self._rng.getion(mc)
-
             if testion == ion:
                 xyz.append(self._pos.xyz[i])
 
