@@ -23,9 +23,14 @@ class RangeLoader():
     """
 
     def __init__(self, path):
-        self.loadfile(path)
         self.natoms = None
         self.nranges = None
+
+        self.atomlist = None
+        self.ionlist = None
+        self.rnglist = None
+
+        self.loadfile(path)
 
     def loadfile(self, path):
         return
@@ -41,16 +46,6 @@ class RangeLoader():
 
     def getcolour(self, atomname):
         return
-
-    def atomlist(self):
-        return
-
-    def ionlist(self):
-        return
-
-    def rnglist(self):
-        return
-
 
 
 # === Concrete rangefile loader classes ===
@@ -76,38 +71,31 @@ class RNG(RangeLoader):
         self.ranges, self.colours = self._parse(rngsraw, atomsraw, rngcomp)
 
         # Generate atom, ion, rng lists
-        self.atomlist = self.genatomlist()
-        self.ionlist = self.genionlist()
-        self.rnglist = self.genrnglist()
+        self.atomlist = self._genatomlist()
+        self.ionlist = self._genionlist()
+        self.rnglist = self._genrnglist()
         return
 
 
-    def genatomlist(self):
+    def _genatomlist(self):
         """Return list of all atoms in rangefile"""
         atomlist = list(self.colours.keys())
         return atomlist
 
-    def genionlist(self):
+    def _genionlist(self):
         """Return list of all ions in rangefile"""
-        ions = []
-        for line in self.ranges:
-            atoms = line[1]
-            ions.append(atoms)
-
-        # Remove duplicates
+        ions = self.ranges['atoms']
         ionlist = np.unique(ions)
-
         return ionlist
 
-    def genrnglist(self):
+    def _genrnglist(self):
         """Return list of all ranges in rangefile"""
-        # NOTE currently a list of range tuples
-        # referenced by "rngid" = index in list
-        # There is possibly a better way to do this
+        rngl = self.ranges['mcl']
+        rngu = self.ranges['mcu']
 
-        rnglist = []
-        for line in self.ranges:
-            rnglist.append(line[0])
+        # Can't simply view self.ranges[['mcl', 'mcu']]
+        # due to object field in self.ranges atoms column
+        rnglist = np.column_stack((rngl, rngu))
         return rnglist
 
 
@@ -129,11 +117,19 @@ class RNG(RangeLoader):
         """
         Returns ion name matching the given m/c.
         Returns None for an unranged m/c.
-        """
 
-        for rng, atoms in self.ranges:
-            if (mc > rng[0]) & (mc < rng[1]):
-                return atoms
+        (Assumes no ranges overlap)
+        """
+        # TODO raise error if test mc matches more than one range
+
+        match = (mc > self.ranges['mcl']) & (mc < self.ranges['mcu'])
+        if match.any():
+            ion = self.ranges['atoms'][match][0]
+            return ion
+        else:
+            return None
+
+        #    if (mc > rng[0]) & (mc < rng[1]):
         return None
 
     def getrng(self, mc):
@@ -191,7 +187,8 @@ class RNG(RangeLoader):
         ranges : [(min m/c, max m/c), (matching atoms)] (nrngs x 2 np array)
         atoms  : (str) atom name -> (R, G, B) atom colour (natoms x dict)
         """
-        ranges = np.zeros((self.nrngs, 2), dtype=object)
+        ranges_dtype = np.dtype([('mcl', np.float32), ('mcu', np.float32), ('atoms', np.object)])
+        ranges = np.zeros(self.nrngs, dtype=ranges_dtype)
         atoms = {}
 
         # Populate ranges
@@ -201,13 +198,16 @@ class RNG(RangeLoader):
             atominds = np.nonzero(comp)[0]      # Inds of atoms in range
             rngatoms = atomsraw[atominds,0]     # Atoms in range with colours
 
-            ranges[i][0] = tuple(rng)
-            ranges[i][1] = tuple(rngatoms)
+            ranges[i]['mcl'] = rng[0]
+            ranges[i]['mcu'] = rng[1]
+            ranges[i]['atoms'] = tuple(rngatoms)
 
         # Populate atoms dict
         for atom in atomsraw:
             atoms[atom[0]] = (atom[1], atom[2], atom[3])
 
+
+        print("RANGES GEN'D", ranges)
         return ranges, atoms
 
 

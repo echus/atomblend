@@ -39,12 +39,12 @@ class ReadAPTData():
         try:
             self._pos = pl.POS(pospath)
         except pl.ReadError:
-            raise APTReadError('Error opening pos file %s' % pos_fn)
+            raise APTReadError('Error opening pos file %s' % pospath)
             return
         try:
             self._rng = rl.RNG(rngpath)
         except rl.ReadError:
-            raise APTReadError('Error opening rng file %s' % rng_fn)
+            raise APTReadError('Error opening rng file %s' % rngpath)
             return
 
         self.pospath = pospath

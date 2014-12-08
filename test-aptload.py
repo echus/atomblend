@@ -12,7 +12,7 @@ ionlist = data.ions
 print("Ion list:", ionlist)
 print()
 
-ion = ionlist[3]
+ion = ionlist[0]
 print("Ion:", ion)
 print()
 
