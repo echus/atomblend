@@ -1,3 +1,12 @@
+# =============================================================================
+# File:   betweendict.py
+# Date:   2014-07-01
+# Author: http://joshuakugler.com/archives/30-BetweenDict,-a-Python-dict-for-value-ranges.html
+#
+# Description:
+# Dictionary implementation for value ranges
+# =============================================================================
+
 class BetweenDict(dict):
     def __init__(self, d = {}):
         for k,v in d.items():
