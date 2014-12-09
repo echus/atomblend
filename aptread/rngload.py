@@ -13,6 +13,8 @@
 
 import numpy as np
 
+from betweendict import BetweenDict
+
 class ReadError(Exception): pass
 
 # === Rangefile loader interface definition ===
@@ -35,16 +37,13 @@ class RangeLoader():
     def loadfile(self, path):
         return
 
-    def getatoms(self, mc):
+    def atoms(self, mc):
         return
 
-    def getion(self, mc):
+    def range(self, mc):
         return
 
-    def getisotope(self, mc):
-        return
-
-    def getcolour(self, atomname):
+    def colour(self, atomname):
         return
 
 
@@ -84,60 +83,42 @@ class RNG(RangeLoader):
 
     def _genionlist(self):
         """Return list of all ions in rangefile"""
-        ions = self.ranges['atoms']
+        ions = []
+        for rng, rngdict in self.ranges.items():
+            ions.append(rngdict['atoms'])
+
         ionlist = np.unique(ions)
         return ionlist
 
     def _genrnglist(self):
         """Return list of all ranges in rangefile"""
-        rngl = self.ranges['mcl']
-        rngu = self.ranges['mcu']
-
-        # Can't simply view self.ranges[['mcl', 'mcu']]
-        # due to object field in self.ranges atoms column
-        rnglist = np.column_stack((rngl, rngu))
-        return rnglist
+        return list(self.ranges.keys())
 
 
 
-    def getatoms(self, mc):
+    def atoms(self, mc):
         """
         Returns tuple of atoms matching the given m/c.
         Returns None for an unranged m/c.
         """
-
-        # Note: assumes there are no overlapping ranges
-        # This should be checked upon loading the range file
-        for rng, atoms in self.ranges:
-            if (mc > rng[0]) & (mc < rng[1]):
-                return atoms
-        return None
-
-    def getion(self, mc):
-        """
-        Returns ion name matching the given m/c.
-        Returns None for an unranged m/c.
-
-        (Assumes no ranges overlap)
-        """
-        # TODO raise error if test mc matches more than one range
-
-        # Use self.rnglist (not self.ranges) for slightly faster access
-        match = (mc > self.rnglist[:,0]) & (mc < self.rnglist[:,1])
-
-        if match.any():
-            ion = self.ranges['atoms'][match][0]
-            return ion
+        if mc in self.ranges:
+            return self.ranges[mc]['atoms']
         else:
             return None
 
-    def getrng(self, mc):
+    def range(self, mc):
         """Return isotope matching the given m/c"""
         # TODO
-        return
+        if mc in self.ranges:
+            return self.ranges[mc]['id']
+        else:
+            return None
 
-    def getcolour(self, atomname):
-        return self.colours[atomname]
+    def colour(self, atomname):
+        if atomname in self.colours:
+            return self.colours[atomname]
+        else:
+            return None
 
 
 
@@ -184,12 +165,12 @@ class RNG(RangeLoader):
         rngcomp   : composition array
 
         Returns:
-        ranges : [(min m/c, max m/c), (matching atoms)] (nrngs x 2 np array)
+        ranges : (range [len=2]) mc range -> dict(atoms -> (tup), rngid -> int)
         atoms  : (str) atom name -> (R, G, B) atom colour (natoms x dict)
         """
-        ranges_dtype = np.dtype([('mcl', np.float32), ('mcu', np.float32), ('atoms', np.object)])
-        ranges = np.zeros(self.nrngs, dtype=ranges_dtype)
-        atoms = {}
+
+        ranges = BetweenDict()
+        colours = {}
 
         # Populate ranges
         for i, rng in enumerate(rngsraw):
@@ -198,23 +179,14 @@ class RNG(RangeLoader):
             atominds = np.nonzero(comp)[0]      # Inds of atoms in range
             rngatoms = atomsraw[atominds,0]     # Atoms in range with colours
 
-            ranges[i]['mcl'] = rng[0]
-            ranges[i]['mcu'] = rng[1]
-            ranges[i]['atoms'] = tuple(rngatoms)
+            rngdict = {}
+            rngdict['id'] = i
+            rngdict['atoms'] = tuple(rngatoms)
 
-        # Populate atoms dict
+            ranges[list(rng)] = rngdict
+
+        # Populate colours dict
         for atom in atomsraw:
-            atoms[atom[0]] = (atom[1], atom[2], atom[3])
+            colours[atom[0]] = (atom[1], atom[2], atom[3])
 
-
-        print("RANGES GEN'D", ranges)
-        return ranges, atoms
-
-
-
-# Helper functions
-def _unique_rows(a):
-    # Returns unique rows in numpy 2D array
-    a = np.ascontiguousarray(a)
-    unique_a = np.unique(a.view([('', a.dtype)]*a.shape[1]))
-    return unique_a.view(a.dtype).reshape((unique_a.shape[0], a.shape[1]))
+        return ranges, colours
