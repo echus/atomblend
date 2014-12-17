@@ -1,53 +1,48 @@
-#----------------------------------------------------------
-# APTloader.py
-#----------------------------------------------------------
+# =============================================================================
+# (C) Copyright 2014
+# Australian Centre for Microscopy & Microanalysis
+# The University of Sydney
+# =============================================================================
+# File:   APTloader.py
+# Date:   2014-07-01
 # Author: Varvara Efremova
-# Date: 14 April 2014
-# Copyright (c) 2014 Australian Centre for Microscopy & Microanalysis (ACMM), The University of Sydney, NSW 2006 Australia. All rights reserved.
-
-# TODO proper docstrings!!
-
-from __future__ import print_function
+#
+# Description:
+# APT data loader
+# =============================================================================
 
 import numpy as np
 
-# TODO this only works when run from inside blender/outside package
-# - what's a better way of referencing modules within a package?
-#import POSloader as pl
-#import ORNLRNGloader as rl
 from . import POSloader as pl
 from . import ORNLRNGloader as rl
 
-""" Helper functions """
+# === Helper functions ===
 def _unique_rows(a):
     # Helper function: returns unique rows in np 2d array
     a = np.ascontiguousarray(a)
     unique_a = np.unique(a.view([('', a.dtype)]*a.shape[1]))
     return unique_a.view(a.dtype).reshape((unique_a.shape[0], a.shape[1]))
 
-""" Exceptions """
+# === Exceptions ===
 class APTReadError(Exception): pass
 class InvalidRngError(Exception): pass
 class InvalidIndexError(Exception): pass
 
-""" Class defs """
-# read in complete pos + rng info
+# === Class defs ===
 class ReadAPTData():
-    """ TODO:
-
-    Docs here?
-    !!!
     """
-    def __init__(self, pos_fn, rng_fn):
+    APT data reader class
+    """
+    def __init__(self, pospath, rngpath):
         try:
-            self._posfile = pl.ReadPos(pos_fn)
+            self._posfile = pl.ReadPos(pospath)
         except pl.ReadError:
-            raise APTReadError('Error opening pos file %s' % pos_fn)
+            raise APTReadError('Error opening pos file %s' % pospath)
             return
         try:
-            self._rngfile = rl.ReadRng(rng_fn)
+            self._rngfile = rl.ReadRng(rngpath)
         except rl.ReadError:
-            raise APTReadError('Error opening rng file %s' % rng_fn)
+            raise APTReadError('Error opening rng file %s' % rngpath)
             return
 
         self.numpts = self._posfile.numpts
