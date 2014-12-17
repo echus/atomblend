@@ -54,13 +54,12 @@ class ReadAPTData():
 
         self.rnglist = self._rngfile.rng
         self.atomlist = self._rngfile.atominfo[:,0]
-        self._calc_ionlist() # TODO ionlist is preallocated within the function ...?
+        self.ions = self.gen_ions()
 
-        # populate array mapping points to rngs
-        # TODO should I preallocate self.rngmap here or within the function??
-        self.rngmap = self.calc_rngmap(self.mc)
+        # Generate array mapping points to ranges
+        self.rngmap = self.gen_rngmap(self.mc)
 
-    def calc_rngmap(self, mc):
+    def gen_rngmap(self, mc):
         """
         Calculate array mapping array of mcs to their respective ranges
         """
@@ -76,29 +75,32 @@ class ReadAPTData():
 
         return rngmap
 
-    def _calc_ionlist(self):
-        """ Populate ionlist array """
-        # 2D array with columns: (ion string ID, index ref to self.rnglist)
+    def gen_ions(self):
+        """
+        Generate ions dictionary relating human-readable ion ID strings
+        to corresponding range indices
+        """
+        # Unique ions in omposition array from .rng file
         boolcomp = self.rngcomp.astype(bool)
-        ions = _unique_rows(boolcomp)
+        ionscomp = _unique_rows(boolcomp)
 
-        # Get rnglist indices corresponding to the unique ions
-        ioninds = np.zeros(ions.shape[0])
-        for i, ion in enumerate(ions):
+        ions = {} # Ions string ID -> range index dictionary
+
+        # Gen list of rnglist indices corresponding to the unique ions
+        for ion in ionscomp:
             # inds: all indices in rnglist/rngcomp corresponding to current ion
             inds = np.where((boolcomp == ion).all(axis=1))[0]
-            ioninds[i] = int(inds[0])
 
-        self.ionlist = np.zeros(ions.shape[0], dtype=self.atomlist.dtype)  # human-readable ion names
-        self._ioninds = np.zeros(ions.shape[0], dtype='i8') # ion references by range index
-                                                             # for use in getion
+            atoms = self.atomlist[ion] # List of atom names in ion
+            ionname = "".join(atoms)   # String ion name (cat of atoms)
 
-        # generate unique human-readable string ids for each ion
-        for i, (ion, ind) in enumerate(zip(ions, ioninds)):
-            atoms = self.atomlist[ion]
-            ionid = "".join(atoms)
-            self.ionlist[i] = ionid
-            self._ioninds[i] = int(ind)
+            ions[ionname] = inds
+
+            print("ION", ion)
+            print("IONNAME", ions[ionname])
+            print()
+
+        return ions
 
     # TODO find a cleaner way to vectorize this?
     def getrng(self, rngind):
