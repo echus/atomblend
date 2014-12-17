@@ -31,10 +31,12 @@ class InvalidRngError(Exception): pass
 class InvalidIndexError(Exception): pass
 
 class ReadAPTData():
-    """ ReadAPTData
-
-    Read in complete pos and rng info from files
     """
+    ReadAPTData
+
+    Read in complete pos and range info from input data files
+    """
+
     def __init__(self, pospath, rngpath):
         try:
             self._pos = pl.POS(pospath)
@@ -50,8 +52,23 @@ class ReadAPTData():
         self.pospath = pospath
         self.rngpath = rngpath
 
+        # Generate atom/range information array
+        self.info = self._genarray()
+        print("ARRAY", self.info[0:10])
+
     def __len__(self):
         return len(self._pos.xyz)
+
+    def _genarray(self):
+        # Generate array of atom/range info for each pos.xyz point
+        d = np.dtype([('rangeid', np.int32), ('atoms', np.object)])
+        info = np.zeros(len(self), dtype = d)
+
+        for i, mc in enumerate(self._pos.mc):
+            info[i]['atoms'] = self._rng.atoms(mc)
+            info[i]['rangeid'] = self._rng.rangeid(mc)
+
+        return info
 
     @property
     def ions(self):

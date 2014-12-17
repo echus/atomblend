@@ -12,8 +12,9 @@
 # =============================================================================
 
 import numpy as np
+from operator import itemgetter # For sorting dict keys
 
-from betweendict import BetweenDict
+from .betweendict import BetweenDict
 
 class ReadError(Exception): pass
 
@@ -40,7 +41,7 @@ class RangeLoader():
     def atoms(self, mc):
         return
 
-    def range(self, mc):
+    def rangeid(self, mc):
         return
 
     def colour(self, atomname):
@@ -92,6 +93,7 @@ class RNG(RangeLoader):
 
     def _genrnglist(self):
         """Return list of all ranges in rangefile"""
+        # TODO sort these by range id
         return list(self.ranges.keys())
 
 
@@ -106,13 +108,14 @@ class RNG(RangeLoader):
         else:
             return None
 
-    def range(self, mc):
+    def rangeid(self, mc):
         """Return isotope matching the given m/c"""
         # TODO
         if mc in self.ranges:
             return self.ranges[mc]['id']
         else:
-            return None
+            # return -1 for numpy int32 field convenience (used in aptload)
+            return -1
 
     def colour(self, atomname):
         if atomname in self.colours:
