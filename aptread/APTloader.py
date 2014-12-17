@@ -58,21 +58,23 @@ class ReadAPTData():
 
         # populate array mapping points to rngs
         # TODO should I preallocate self.rngmap here or within the function??
-        self.rngmap = np.zeros(self.mc.shape)
-        self._calc_rngmap()
+        self.rngmap = self.calc_rngmap(self.mc)
 
-    # TODO preallocate self.rngmap within this func
-    def _calc_rngmap(self):
-        # populate rngmap array, mapping xyz posfile points to respective ranges
-        # rngmap must be initialised to size of posfile before this is called   mcarray = self.mc
-        rngmap = self.rngmap
+    def calc_rngmap(self, mc):
+        """
+        Calculate array mapping array of mcs to their respective ranges
+        """
+        rngmap = np.zeros(mc.shape)
+
         for rngind, rng in enumerate(self.rnglist):
             rng = self.rnglist[rngind,:]
             # rngarray: 1 where mc matches current range, 0 where not
-            rngarray = ((self.mc > rng[0]) & (self.mc < rng[1])).astype(int)
+            rngarray = ((mc > rng[0]) & (mc < rng[1])).astype(int)
             rngarray *= (rngind + 1) # add one to differentiate between 0 indeces and
                                      # unranged points
             rngmap += rngarray
+
+        return rngmap
 
     def _calc_ionlist(self):
         """ Populate ionlist array """
