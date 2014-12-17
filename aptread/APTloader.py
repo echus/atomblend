@@ -52,22 +52,27 @@ class ReadAPTData():
         self.rngcomp = self._rngfile.rngcomp
         self.atominfo = self._rngfile.atominfo
 
-        self.rnglist = self._rngfile.rng
-        self.atomlist = self._rngfile.atominfo[:,0]
-        self.ions = self.gen_ions()
-        print(self.ions)
+        self.ranges = self._rngfile.rng
+
+        self.atoms, self.atomlist = self.genatoms()
+        self.ions, self.ionlist  = self.genions()
+        print(self.atoms, self.atomlist)
+        print(self.ions, self.ionlist)
 
         # Generate array mapping points to ranges
-        self.rngmap = self.gen_rngmap(self.mc)
+        self.rngmap = self.genrngmap(self.mc)
 
-    def gen_rngmap(self, mc):
+
+
+    # === Generation functions ===
+    def genrngmap(self, mc):
         """
         Calculate array mapping array of mcs to their respective ranges
         """
         rngmap = np.zeros(mc.shape)
 
-        for rngind, rng in enumerate(self.rnglist):
-            rng = self.rnglist[rngind,:]
+        for rngind, rng in enumerate(self.ranges):
+            rng = self.ranges[rngind,:]
             # rngarray: 1 where mc matches current range, 0 where not
             rngarray = ((mc > rng[0]) & (mc < rng[1])).astype(int)
             rngarray *= (rngind + 1) # add one to differentiate between 0 indeces and
@@ -76,87 +81,102 @@ class ReadAPTData():
 
         return rngmap
 
-    def gen_ions(self):
+    def genatoms(self):
+        """
+        Generate atoms dictionary relating human-readable atom ID strings
+        to corresponding range indices
+
+        Outputs:
+        atoms: atom ID -> rnginds dictionary
+        atomnames: ordered list of atom IDs (corresponding to rngcomp layout)
+        """
+
+        atomnames = self._rngfile.atominfo[:,0]
+        atoms = {}
+
+        for i, atomname in enumerate(atomnames):
+            rnginds = self.rngcomp[:,i].nonzero()[0] # Range indexes of atom
+            atoms[atomname] = rnginds
+
+        return atoms, atomnames
+
+    def genions(self):
         """
         Generate ions dictionary relating human-readable ion ID strings
         to corresponding range indices
+
+        ions:     ion ID -> rnginds dictionary
+        ionnames: ordered list of ion IDs (corresponding to rngcomp layout)
         """
         # Unique ions in omposition array from .rng file
         boolcomp = self.rngcomp.astype(bool)
         ionscomp = _unique_rows(boolcomp)
 
         ions = {} # Ions string ID -> range index dictionary
+        ionnames = []
 
         # Gen list of rnglist indices corresponding to the unique ions
         for ion in ionscomp:
-            # inds: all indices in rnglist/rngcomp corresponding to current ion
-            inds = np.where((boolcomp == ion).all(axis=1))[0]
+            # rnginds: all indices in rnglist/rngcomp corresponding to current ion
+            rnginds = np.where((boolcomp == ion).all(axis=1))[0]
 
             atoms = self.atomlist[ion] # List of atom names in ion
             ionname = "".join(atoms)   # String ion name (cat of atoms)
 
-            ions[ionname] = inds
+            ions[ionname] = rnginds
+            ionnames.append(ionname)
 
             print("ION", ion)
             print("IONNAME", ions[ionname])
             print()
 
-        return ions
+        return ions, ionnames
 
+
+
+    # === API functions ===
     # TODO find a cleaner way to vectorize this?
-    def getrng(self, rngind):
-        """ Returns all xyz points in the selected range reference.
+    def getrng(self, rnginds, mc, xyz):
+        """
+        Returns all xyz points in the selected range reference(s).
 
         Arguments:
-        rngind -- index of the rng in self.rnglist (int or array_like)
-                  value of -1 signifies unranged point
+        rnginds -- indexes of wanted range in self.ranges (int or array_like)
+        mc     -- array of mass to charge ratios to operate on
 
         Returns:
-        numpy 2D array of xyz points
+        Numpy 2D array of xyz points matching the selected range(s)
         """
-        # rngind indexing starts from 1 internally
+        # rnginds indexing starts from 1 internally
         # 0 points in rngmap are unranged points
-        rngind += 1
-        ind = np.zeros(self.mc.shape, dtype=bool)
-        if isinstance(rngind, int):
-            ind = (self.rngmap == rngind)
-        elif isinstance(rngind, list) or isinstance(rngind, np.ndarray):
-            for ri in rngind:
+        rnginds += 1
+        ind = np.zeros(mc.shape, dtype=bool)
+        if isinstance(rnginds, int):
+            ind = (self.rngmap == rnginds)
+        elif isinstance(rnginds, list) or isinstance(rnginds, np.ndarray):
+            for ri in rnginds:
                 ind = np.logical_xor(ind, (self.rngmap == ri))
         else:
-            raise InvalidRngError('APTloader.getrng input "rngind" is not a valid int or list')
+            raise InvalidRngError('APTloader.getrng input "rnginds" is not a valid int or list')
             return None
-        return self.xyz[ind]
 
-    def getion(self, ionind):
+        return xyz[ind]
+
+    def getion(self, ionname, mc, xyz):
         """ Returns all points that match the selected ion.
 
         Arguments:
         ionind -- index of the ion in self.ionlist
         """
-        ionref = self._ioninds[ionind] # get reference index to ion in rng array
 
-        # select all ranges that match the given ion's compositions
-        boolcomp = self.rngcomp.astype(bool)
-        ion = boolcomp[ionref]
+        rnginds = self.ions[ionname]
+        return self.getrng(rngind, mc, xyz)
 
-        # select rows in boolcomp that match ion
-        # ie the ranges that match the ion composition
-        # self.rngcomp[boolind] are the matching rng compositions
-        boolind = (boolcomp == ion).all(axis=1)
-        rngind = boolind.nonzero()[0]
-        return self.getrng(rngind)
-
-    # atomind indexing starts from 0
-    # returns all points that match selected atom
-    # calls:
-    #   self.getrng
-    def getatom(self, atomind):
+    def getatom(self, atomname, mc, xyz):
         """ Returns all points that match the selected atom.
 
         Arguments:
         atomind -- index of the atom in self.atomlist
         """
-        # TODO check for out of bounds atomind, throw error, or catch invalid index error?
-        rngind = self.rngcomp[:,atomind].nonzero()[0]
-        return self.getrng(rngind)
+        rnginds = self.atoms[atomname]
+        return self.getrng(rngind, mc, xyz)
