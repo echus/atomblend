@@ -75,12 +75,12 @@ class ReadAPTData():
             rngmap += rngarray
 
     def _calc_ionlist(self):
-        # populate ionlist array
-        # 2d array with cols: (ion string ID, index ref to self.rnglist)
+        """ Populate ionlist array """
+        # 2D array with columns: (ion string ID, index ref to self.rnglist)
         boolcomp = self.rngcomp.astype(bool)
         ions = _unique_rows(boolcomp)
 
-        # get rnglist indices corresponding to the unique ions
+        # Get rnglist indices corresponding to the unique ions
         ioninds = np.zeros(ions.shape[0])
         for i, ion in enumerate(ions):
             # inds: all indices in rnglist/rngcomp corresponding to current ion
