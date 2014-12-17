@@ -55,6 +55,7 @@ class ReadAPTData():
         self.rnglist = self._rngfile.rng
         self.atomlist = self._rngfile.atominfo[:,0]
         self.ions = self.gen_ions()
+        print(self.ions)
 
         # Generate array mapping points to ranges
         self.rngmap = self.gen_rngmap(self.mc)
