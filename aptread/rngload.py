@@ -16,6 +16,17 @@ import numpy as np
 class ReadError(Exception): pass
 
 class ORNLRNG():
+    """
+    ORNL range file loader
+
+    Usage:
+      range = ORNLRNG("/path/to/file.rng") # Loads and parses rangefile
+      range.loadpos(posloader_object)      # Ranges posfile
+
+      range.atomlist                       # List of all atoms ranged
+      range.getatom("Si")                  # Returns a list of loaded pos
+                                           # points matching ion "Si"
+    """
     def __init__(self, rngpath):
         # Load raw rangefile information
         self._rawdata = self._loadfile(rngpath)
@@ -98,7 +109,7 @@ class ORNLRNG():
         # Sets self._ranges, self.rangelist
 
         self._ranges    = self._rawdata['ranges']
-        self.rangeslist = self._rawdata['ranges']
+        self.rangelist = self._rawdata['ranges']
 
     def _genatoms(self):
         # Generate atoms dictionary relating human-readable atom ID strings
@@ -162,7 +173,7 @@ class ORNLRNG():
 
 
 
-    # === POS processing functions ===
+    # === POS ranging functions ===
     def loadpos(self, pos):
         """ Load new pos information """
         # Sets self.pos, self.posmap
@@ -188,11 +199,66 @@ class ORNLRNG():
 
 
 
+    # === POS point return functions ===
+    # TODO find a cleaner way to vectorize this?
+    def getrng(self, rnginds):
+        """
+        Returns all xyz points in the selected range reference(s).
+
+        Arguments:
+        rnginds -- indexes of wanted range in self.ranges (int or array_like)
+        mc     -- array of mass to charge ratios to operate on
+
+        Returns:
+        Numpy 2D array of xyz points matching the selected range(s)
+        """
+        mc  = self.pos.mc
+        xyz = self.pos.xyz
+
+        # rnginds indexing starts from 1 internally
+        # 0 points in rngmap are unranged points
+        rnginds += 1
+        ind = np.zeros(mc.shape, dtype=bool)
+        if isinstance(rnginds, int):
+            ind = (self._posmap == rnginds)
+        elif isinstance(rnginds, list) or isinstance(rnginds, np.ndarray):
+            for ri in rnginds:
+                ind = np.logical_xor(ind, (self._posmap == ri))
+        else:
+            raise InvalidRngError('APTloader.getrng input "rnginds" is not a valid int or list')
+            return None
+
+        return xyz[ind]
+
+    def getion(self, ionname):
+        """ Returns all points that match the selected ion.
+
+        Arguments:
+        ionind -- index of the ion in self.ionlist
+        """
+        mc  = self.pos.mc
+        xyz = self.pos.xyz
+
+        rnginds = self._ions[ionname]
+        return self.getrng(rnginds)
+
+    def getatom(self, atomname):
+        """ Returns all points that match the selected atom.
+
+        Arguments:
+        atomind -- index of the atom in self.atomlist
+        """
+        mc  = self.pos.mc
+        xyz = self.pos.xyz
+
+        rnginds = self._atoms[atomname]
+        return self.getrng(rnginds)
+
+
+
 # === Helper functions ===
 def _unique_rows(a):
     # Helper function: returns unique rows in np 2d array
     a = np.ascontiguousarray(a)
     unique_a = np.unique(a.view([('', a.dtype)]*a.shape[1]))
     return unique_a.view(a.dtype).reshape((unique_a.shape[0], a.shape[1]))
-
-
