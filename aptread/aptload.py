@@ -3,7 +3,7 @@
 # Australian Centre for Microscopy & Microanalysis
 # The University of Sydney
 # =============================================================================
-# File:   APTloader.py
+# File:   aptload.py
 # Date:   2014-07-01
 # Author: Varvara Efremova
 #
@@ -29,7 +29,7 @@ class InvalidRngError(Exception): pass
 class InvalidIndexError(Exception): pass
 
 # === Class defs ===
-class ReadAPTData():
+class APData():
     """
     APT data reader class
     """

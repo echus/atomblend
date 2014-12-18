@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
 import numpy as np
-from aptread.APTloader import ReadAPTData
+from aptread.aptload import APData
 
-#pos_fn = raw_input('Enter pos filename: ')
-#rng_fn = raw_input('Enter rng filename: ')
-pos_fn = "./data/R04.pos"
-rng_fn = "./data/R04.rng"
+pospath = "./data/R04.pos"
+rngpath = "./data/R04.rng"
 
-data = ReadAPTData(pos_fn, rng_fn)
+data = APData(pospath, rngpath)
 print(data.xyz)
