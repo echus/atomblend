@@ -240,7 +240,7 @@ class ORNLRNG():
         xyz = self._pos.xyz
 
         rnginds = self._ions[ionname]
-        return self.getrng(rnginds)
+        return self.getrange(rnginds)
 
     def getatom(self, atomname):
         """ Returns all points that match the selected atom.
@@ -252,7 +252,7 @@ class ORNLRNG():
         xyz = self._pos.xyz
 
         rnginds = self._atoms[atomname]
-        return self.getrng(rnginds)
+        return self.getrange(rnginds)
 
 
 
