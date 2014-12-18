@@ -176,15 +176,15 @@ class ORNLRNG():
     # === POS ranging functions ===
     def loadpos(self, pos):
         """ Load new pos information """
-        # Sets self.pos, self.posmap
+        # Sets self._pos, self._posmap
 
-        self.pos = pos
+        self._pos = pos
         self._genposmap() # Map range information to loaded pos info
 
     def _genposmap(self):
-        # Map pos information to associated ranges in self.posmap
+        # Map pos information to associated ranges in self._posmap
         # Called by loadpos
-        mc = self.pos.mc
+        mc = self._pos.mc
 
         rngmap = np.zeros(mc.shape)
         for rngind, rng in enumerate(self._ranges):
@@ -195,7 +195,7 @@ class ORNLRNG():
                                      # unranged points
             rngmap += rngarray
 
-        return rngmap
+        self._posmap = rngmap
 
 
 
@@ -212,8 +212,8 @@ class ORNLRNG():
         Returns:
         Numpy 2D array of xyz points matching the selected range(s)
         """
-        mc  = self.pos.mc
-        xyz = self.pos.xyz
+        mc  = self._pos.mc
+        xyz = self._pos.xyz
 
         # rnginds indexing starts from 1 internally
         # 0 points in rngmap are unranged points
@@ -236,8 +236,8 @@ class ORNLRNG():
         Arguments:
         ionind -- index of the ion in self.ionlist
         """
-        mc  = self.pos.mc
-        xyz = self.pos.xyz
+        mc  = self._pos.mc
+        xyz = self._pos.xyz
 
         rnginds = self._ions[ionname]
         return self.getrng(rnginds)
@@ -248,8 +248,8 @@ class ORNLRNG():
         Arguments:
         atomind -- index of the atom in self.atomlist
         """
-        mc  = self.pos.mc
-        xyz = self.pos.xyz
+        mc  = self._pos.mc
+        xyz = self._pos.xyz
 
         rnginds = self._atoms[atomname]
         return self.getrng(rnginds)

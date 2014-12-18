@@ -10,12 +10,20 @@ print("Atoms: ", rngfile.atomlist)
 print("Ions:  ", rngfile.ionlist)
 print("N ranges:", rngfile.nranges)
 print("N atoms: ",  rngfile.natoms)
+print()
+print("DICTS")
+print("Ranges:", rngfile._ranges)
+print("Atoms: ", rngfile._atoms)
+print("Ions:  ", rngfile._ions)
 
 print()
 posfile = POS(pospath)
 print("Loading posfile")
 rngfile.loadpos(posfile)
+print("POS:    ", rngfile._pos)
+print("POS map:", rngfile._posmap)
 
+print()
 ION = 2
 ionname = rngfile.ionlist[ION]
 print("Getting points for ion", ionname)
