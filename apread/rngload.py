@@ -109,7 +109,7 @@ class ORNLRNG():
         # Sets self._ranges, self.rangelist
 
         self._ranges   = self._rawdata['ranges']
-        self.rangelist = np.arange(len(self._ranges))
+        self.rangelist = range(len(self._ranges))
 
     def _genatoms(self):
         # Generate atoms dictionary relating human-readable atom ID strings
