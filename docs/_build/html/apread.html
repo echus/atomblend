@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>apread: AP data loader &mdash; AtomBlend 1.0 documentation</title>
+    <title>apread: AP data loader module &mdash; AtomBlend 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,7 +23,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="AtomBlend 1.0 documentation" href="index.html" /> 
+    <link rel="top" title="AtomBlend 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Framework" href="framework.html" /> 
   </head>
   <body>
     <div class="related">
@@ -32,7 +33,10 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="index.html">AtomBlend 1.0 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="framework.html" title="Framework"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">AtomBlend</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -41,8 +45,237 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="apread-ap-data-loader">
-<h1>apread: AP data loader<a class="headerlink" href="#apread-ap-data-loader" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="apread-ap-data-loader-module">
+<h1>apread: AP data loader module<a class="headerlink" href="#apread-ap-data-loader-module" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="apload-py">
+<h2>apload.py<a class="headerlink" href="#apload-py" title="Permalink to this headline">¶</a></h2>
+<p>apload.py contains the APData wrapper class for interacting with the
+range/pos-loading classes defined in rngload/posload. APData handles
+initialising the range loading class to operate a specific pos object.</p>
+<p>AtomBlend accesses all AP data through the APData class.</p>
+<p>In the future APData will handle loading multiple filetypes with the correct
+classes in rngload/posload.py.</p>
+<dl class="class">
+<dt id="apread.apload.APData">
+<em class="property">class </em><tt class="descclassname">apread.apload.</tt><tt class="descname">APData</tt><big>(</big><em>pospath</em>, <em>rngpath</em><big>)</big><a class="headerlink" href="#apread.apload.APData" title="Permalink to this definition">¶</a></dt>
+<dd><p>APT data parsing class</p>
+<p>Usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rngpath</span> <span class="o">=</span> <span class="s">&quot;/path/to/rng&quot;</span>
+<span class="n">pospath</span> <span class="o">=</span> <span class="s">&quot;/path/to/pos&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">APData</span><span class="p">(</span><span class="n">pospath</span><span class="p">,</span> <span class="n">rngpath</span><span class="p">)</span>
+
+<span class="n">data</span><span class="o">.</span><span class="n">pos</span>                <span class="c"># Loaded posload object</span>
+<span class="n">data</span><span class="o">.</span><span class="n">pos</span><span class="o">.</span><span class="n">xyz</span>            <span class="c"># [x, y, z] array of all points in pos file</span>
+
+<span class="n">data</span><span class="o">.</span><span class="n">rng</span>                <span class="c"># Loaded rngload object</span>
+<span class="n">data</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">atomlist</span>       <span class="c"># List of all atoms defined in rng file</span>
+<span class="n">data</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">getatom</span><span class="p">(</span><span class="s">&quot;Si&quot;</span><span class="p">)</span>  <span class="c"># Return all points in pos file matching Si&#39;s range</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="posload-py">
+<h2>posload.py<a class="headerlink" href="#posload-py" title="Permalink to this headline">¶</a></h2>
+<p>The posload module contains all classes responsible for loading pos filetypes.
+New classes can be created to handle loading different pos file formats.</p>
+<div class="section" id="interface">
+<h3>Interface<a class="headerlink" href="#interface" title="Permalink to this headline">¶</a></h3>
+<p>All pos loading classes must implement posload.POSInterface.</p>
+<dl class="class">
+<dt id="apread.posload.POSInterface">
+<em class="property">class </em><tt class="descclassname">apread.posload.</tt><tt class="descname">POSInterface</tt><a class="headerlink" href="#apread.posload.POSInterface" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="apread.posload.POSInterface.mc">
+<tt class="descname">mc</tt><em class="property"> = []</em><a class="headerlink" href="#apread.posload.POSInterface.mc" title="Permalink to this definition">¶</a></dt>
+<dd><p>n x 1 numpy array of mass-to-charge ratios corresponding to all points</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.posload.POSInterface.xyz">
+<tt class="descname">xyz</tt><em class="property"> = []</em><a class="headerlink" href="#apread.posload.POSInterface.xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>n x 3 numpy array of xyz points in input posfile</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="available-pos-loaders">
+<h3>Available pos loaders<a class="headerlink" href="#available-pos-loaders" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="apread.posload.POS">
+<em class="property">class </em><tt class="descclassname">apread.posload.</tt><tt class="descname">POS</tt><big>(</big><em>pospath</em><big>)</big><a class="headerlink" href="#apread.posload.POS" title="Permalink to this definition">¶</a></dt>
+<dd><p>.pos file loader</p>
+<dl class="method">
+<dt id="apread.posload.POS.__len__">
+<tt class="descname">__len__</tt><big>(</big><big>)</big><a class="headerlink" href="#apread.posload.POS.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return number of points in pos file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apread.posload.POS._parsefile">
+<tt class="descname">_parsefile</tt><big>(</big><em>path: str) -&gt; (&lt;class 'int'&gt;</em>, <em>&lt;class 'numpy.ndarray'&gt;</em>, <em>&lt;class 'numpy.ndarray'&gt;</em><big>)</big><a class="headerlink" href="#apread.posload.POS._parsefile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse input pos file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.posload.POS.mc">
+<tt class="descname">mc</tt><em class="property"> = None</em><a class="headerlink" href="#apread.posload.POS.mc" title="Permalink to this definition">¶</a></dt>
+<dd><p>n x 1 numpy array of corresponding mass-to-charge ratios</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.posload.POS.xyz">
+<tt class="descname">xyz</tt><em class="property"> = None</em><a class="headerlink" href="#apread.posload.POS.xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>n x 3 numpy array of xyz points in pos file</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="rngload-py">
+<h2>rngload.py<a class="headerlink" href="#rngload-py" title="Permalink to this headline">¶</a></h2>
+<p>The rngload module containes all classes responsible for loading mass-to-charge
+range files. New classes can be created to handle loading different range file
+formats.</p>
+<div class="section" id="id1">
+<h3>Interface<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>There is no definite interface yet, but it will be similar to the RNG loader
+below!</p>
+</div>
+<div class="section" id="available-range-loaders">
+<h3>Available range loaders<a class="headerlink" href="#available-range-loaders" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="apread.rngload.ORNLRNG">
+<em class="property">class </em><tt class="descclassname">apread.rngload.</tt><tt class="descname">ORNLRNG</tt><big>(</big><em>rngpath</em><big>)</big><a class="headerlink" href="#apread.rngload.ORNLRNG" title="Permalink to this definition">¶</a></dt>
+<dd><p>ORNL range file loader</p>
+<p>Usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">range</span> <span class="o">=</span> <span class="n">ORNLRNG</span><span class="p">(</span><span class="s">&quot;/path/to/file.rng&quot;</span><span class="p">)</span> <span class="c"># Loads and parses rangefile</span>
+<span class="nb">range</span><span class="o">.</span><span class="n">loadpos</span><span class="p">(</span><span class="n">posloader_object</span><span class="p">)</span>      <span class="c"># Ranges posfile</span>
+
+<span class="nb">range</span><span class="o">.</span><span class="n">atomlist</span>                       <span class="c"># List of all atoms ranged</span>
+<span class="nb">range</span><span class="o">.</span><span class="n">getatom</span><span class="p">(</span><span class="s">&quot;Si&quot;</span><span class="p">)</span>                  <span class="c"># Returns a list of loaded pos</span>
+                                     <span class="c"># points matching ion &quot;Si&quot;</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="apread.rngload.ORNLRNG._atoms">
+<tt class="descname">_atoms</tt><em class="property"> = None</em><a class="headerlink" href="#apread.rngload.ORNLRNG._atoms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal atom dictionary (atom name -&gt; range indices)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apread.rngload.ORNLRNG._genposmap">
+<tt class="descname">_genposmap</tt><big>(</big><big>)</big><a class="headerlink" href="#apread.rngload.ORNLRNG._genposmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map pos information to associated ranges in self._posmap</p>
+<div class="line-block">
+<div class="line">Called by: self.loadpos()</div>
+<div class="line">Requires: self._pos</div>
+<div class="line">Sets: self._posmap</div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.rngload.ORNLRNG._ions">
+<tt class="descname">_ions</tt><em class="property"> = None</em><a class="headerlink" href="#apread.rngload.ORNLRNG._ions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal ion dictionary (ion name -&gt; range indices)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apread.rngload.ORNLRNG._parsefile">
+<tt class="descname">_parsefile</tt><big>(</big><em>rngpath: str</em><big>)</big> &rarr; dict<a class="headerlink" href="#apread.rngload.ORNLRNG._parsefile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse and return input rangefile as dict</p>
+<p>Arguments:</p>
+<ul class="simple">
+<li><strong>rngpath</strong> - Path to range file</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><strong>ranges</strong> - nranges x 2 array of floats of defined ranges in rng</li>
+<li><strong>atoms</strong> - natoms x 2 array of atom shortnames and colours</li>
+<li><strong>composition</strong> - Boolean ion composition array (nranges x natoms)</li>
+<li><strong>natoms, nragnes</strong> - Number of atoms and ranges in rngfile</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.rngload.ORNLRNG._pos">
+<tt class="descname">_pos</tt><em class="property"> = None</em><a class="headerlink" href="#apread.rngload.ORNLRNG._pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linked pos object reference</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.rngload.ORNLRNG._posmap">
+<tt class="descname">_posmap</tt><em class="property"> = None</em><a class="headerlink" href="#apread.rngload.ORNLRNG._posmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Array mapping pos points to ranges (1:1)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.rngload.ORNLRNG._ranges">
+<tt class="descname">_ranges</tt><em class="property"> = None</em><a class="headerlink" href="#apread.rngload.ORNLRNG._ranges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal range list (np.ndarray shape (2,nranges))</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.rngload.ORNLRNG.atomlist">
+<tt class="descname">atomlist</tt><em class="property"> = None</em><a class="headerlink" href="#apread.rngload.ORNLRNG.atomlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of atom names (str)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apread.rngload.ORNLRNG.getatom">
+<tt class="descname">getatom</tt><big>(</big><em>atomname: str</em><big>)</big> &rarr; numpy.ndarray<a class="headerlink" href="#apread.rngload.ORNLRNG.getatom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all points that match the selected atom.</p>
+<p>Arguments:</p>
+<ul class="simple">
+<li><strong>atomname</strong> - Atom name reference in atomlist</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="apread.rngload.ORNLRNG.getion">
+<tt class="descname">getion</tt><big>(</big><em>ionname: str</em><big>)</big> &rarr; numpy.ndarray<a class="headerlink" href="#apread.rngload.ORNLRNG.getion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all points that match the selected ion.</p>
+<p>Arguments:</p>
+<ul class="simple">
+<li><strong>ionname</strong> - Ion name reference in ionlist</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="apread.rngload.ORNLRNG.getrange">
+<tt class="descname">getrange</tt><big>(</big><em>rnginds: 'int or list of ints'</em><big>)</big> &rarr; numpy.ndarray<a class="headerlink" href="#apread.rngload.ORNLRNG.getrange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all xyz points matching the selected range reference(s).</p>
+<p>Arguments:</p>
+<ul class="simple">
+<li><strong>rnginds</strong> - indexes of wanted range in self.ranges (int or array_like)</li>
+<li><strong>mc</strong> - array of mass to charge ratios to operate on</li>
+</ul>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.rngload.ORNLRNG.ionlist">
+<tt class="descname">ionlist</tt><em class="property"> = None</em><a class="headerlink" href="#apread.rngload.ORNLRNG.ionlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of ion names (str)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apread.rngload.ORNLRNG.loadpos">
+<tt class="descname">loadpos</tt><big>(</big><em>pos</em><big>)</big><a class="headerlink" href="#apread.rngload.ORNLRNG.loadpos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Link new pos object to range file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apread.rngload.ORNLRNG.rangelist">
+<tt class="descname">rangelist</tt><em class="property"> = None</em><a class="headerlink" href="#apread.rngload.ORNLRNG.rangelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of range index references available</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
 </div>
 
 
@@ -51,6 +284,27 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">apread: AP data loader module</a><ul>
+<li><a class="reference internal" href="#apload-py">apload.py</a></li>
+<li><a class="reference internal" href="#posload-py">posload.py</a><ul>
+<li><a class="reference internal" href="#interface">Interface</a></li>
+<li><a class="reference internal" href="#available-pos-loaders">Available pos loaders</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rngload-py">rngload.py</a><ul>
+<li><a class="reference internal" href="#id1">Interface</a></li>
+<li><a class="reference internal" href="#available-range-loaders">Available range loaders</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="framework.html"
+                        title="previous chapter">Framework</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/apread.txt"
@@ -79,12 +333,15 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="index.html">AtomBlend 1.0 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="framework.html" title="Framework"
+             >previous</a> |</li>
+        <li><a href="index.html">AtomBlend</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014, Varvara Efremova.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

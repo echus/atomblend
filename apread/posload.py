@@ -15,26 +15,42 @@ import numpy as np
 
 class ReadError(Exception): pass
 
+class POSInterface():
+    xyz = [] #: n x 3 numpy array of xyz points in input posfile
+    mc  = [] #: n x 1 numpy array of mass-to-charge ratios corresponding to all points
+
+    def __len__(self):
+        """Number of points in pos file"""
+        return
+
 class POS():
+    """.pos file loader"""
+
     def __init__(self, pospath):
-        self._n, self.xyz, self.mc = self.loadfile(pospath)
+        data = self._parsefile(pospath)
+
+        self._n  = data[0]
+        self.xyz = data[1] #: n x 3 numpy array of xyz points in pos file
+        self.mc  = data[2] #: n x 1 numpy array of corresponding mass-to-charge ratios
 
     # TODO more informative errors
     # TODO check it's actually a pos file
-    def loadfile(self, fn):
+    def _parsefile(self, path: str) -> (int, np.ndarray, np.ndarray):
+        """Parse input pos file"""
         try:
-            with open(fn, 'rb') as content_file:
+            with open(path, 'rb') as content_file:
                 pos_raw = content_file.read()
         except (IOError, FileNotFoundError):
-            raise ReadError('Error opening pos file %s' % fn)
+            raise ReadError('Error opening pos file %s' % path)
             return
 
         pos_array = np.ndarray((len(pos_raw)/4,), dtype='>f', buffer=pos_raw)
         pos = np.reshape(pos_array, (-1, 4))
-        numpoints = len(pos)
+        npoints = len(pos)
         xyz = pos[:,0:3]
         mc = pos[:,3]
-        return numpoints, xyz, mc
+        return npoints, xyz, mc
 
     def __len__(self):
+        """Return number of points in pos file"""
         return self._n

@@ -19,7 +19,8 @@ class ORNLRNG():
     """
     ORNL range file loader
 
-    Usage:
+    Usage::
+
       range = ORNLRNG("/path/to/file.rng") # Loads and parses rangefile
       range.loadpos(posloader_object)      # Ranges posfile
 
@@ -29,20 +30,20 @@ class ORNLRNG():
     """
     def __init__(self, rngpath):
         # Load raw rangefile information
-        self._rawdata = self._loadfile(rngpath)
+        self._rawdata = self._parsefile(rngpath)
 
         self.natoms  = self._rawdata['natoms']
         self.nranges = self._rawdata['nranges']
 
         # Internal use range/atom/ion structures
-        self._ranges = None
-        self._atoms  = None
-        self._ions   = None
+        self._ranges = None #: Internal range list (np.ndarray shape (2,nranges))
+        self._atoms  = None #: Internal atom dictionary (atom name -> range indices)
+        self._ions   = None #: Internal ion dictionary (ion name -> range indices)
 
         # Public range information
-        self.rangelist = None
-        self.atomlist  = None
-        self.ionlist   = None
+        self.rangelist = None #: List of range index references available
+        self.atomlist  = None #: List of atom names (str)
+        self.ionlist   = None #: List of ion names (str)
 
         # Populate range information
         self._genranges()
@@ -50,22 +51,27 @@ class ORNLRNG():
         self._genatoms()
 
         # Initialise loadable pos information (used by loadpos)
-        self._pos    = None
-        self._posmap = None
+        self._pos    = None #: Linked pos object reference
+        self._posmap = None #: Array mapping pos points to ranges (1:1)
 
 
 
     # === RNG file parser ===
-    def _loadfile(self, rngpath):
-        # Parse and return input rangefile as dict
-        #
-        # === Return data structure ===
-        # ranges      : nranges x 2 array of floats of defined ranges in rng
-        # atoms       : natoms x 2 array of atom shortnames and colours
-        # composition : boolean ion composition array (nranges x natoms)
-        # natoms,
-        # nranges     : number of atoms and ranges in rngfile
-        # =============================
+    def _parsefile(self, rngpath: str) -> dict:
+        """
+        Parse and return input rangefile as dict
+
+        Arguments:
+
+        * **rngpath** - Path to range file
+
+        Returns:
+
+        * **ranges** - nranges x 2 array of floats of defined ranges in rng
+        * **atoms** - natoms x 2 array of atom shortnames and colours
+        * **composition** - Boolean ion composition array (nranges x natoms)
+        * **natoms, nragnes** - Number of atoms and ranges in rngfile
+        """
 
         # TODO check it's a rng file (avoid utf-8 encoding errors)
         try:
@@ -175,15 +181,20 @@ class ORNLRNG():
 
     # === POS ranging functions ===
     def loadpos(self, pos):
-        """ Load new pos information """
+        """Link new pos object to range file"""
         # Sets self._pos, self._posmap
 
         self._pos = pos
         self._genposmap() # Map range information to loaded pos info
 
     def _genposmap(self):
-        # Map pos information to associated ranges in self._posmap
-        # Called by loadpos
+        """
+        Map pos information to associated ranges in self._posmap
+
+        | Called by: self.loadpos()
+        | Requires: self._pos
+        | Sets: self._posmap
+        """
         mc = self._pos.mc
 
         rngmap = np.zeros(mc.shape)
@@ -201,16 +212,14 @@ class ORNLRNG():
 
     # === POS point return functions ===
     # TODO find a cleaner way to vectorize this?
-    def getrange(self, rnginds):
+    def getrange(self, rnginds: 'int or list of ints') -> np.ndarray:
         """
-        Returns all xyz points in the selected range reference(s).
+        Returns all xyz points matching the selected range reference(s).
 
         Arguments:
-        rnginds -- indexes of wanted range in self.ranges (int or array_like)
-        mc     -- array of mass to charge ratios to operate on
 
-        Returns:
-        Numpy 2D array of xyz points matching the selected range(s)
+        * **rnginds** - indexes of wanted range in self.ranges (int or array_like)
+        * **mc** - array of mass to charge ratios to operate on
         """
         mc  = self._pos.mc
         xyz = self._pos.xyz
@@ -230,11 +239,12 @@ class ORNLRNG():
 
         return xyz[ind]
 
-    def getion(self, ionname):
+    def getion(self, ionname: str) -> np.ndarray:
         """ Returns all points that match the selected ion.
 
         Arguments:
-        ionind -- index of the ion in self.ionlist
+
+        * **ionname** - Ion name reference in ionlist
         """
         mc  = self._pos.mc
         xyz = self._pos.xyz
@@ -242,11 +252,12 @@ class ORNLRNG():
         rnginds = self._ions[ionname]
         return self.getrange(rnginds)
 
-    def getatom(self, atomname):
+    def getatom(self, atomname: str) -> np.ndarray:
         """ Returns all points that match the selected atom.
 
         Arguments:
-        atomind -- index of the atom in self.atomlist
+
+        * **atomname** - Atom name reference in atomlist
         """
         mc  = self._pos.mc
         xyz = self._pos.xyz

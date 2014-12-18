@@ -24,7 +24,21 @@ class InvalidIndexError(Exception): pass
 # === Class defs ===
 class APData():
     """
-    APT data reader class
+    APT data parsing class
+
+    Usage::
+
+        rngpath = "/path/to/rng"
+        pospath = "/path/to/pos"
+        data = APData(pospath, rngpath)
+
+        data.pos                # Loaded posload object
+        data.pos.xyz            # [x, y, z] array of all points in pos file
+
+        data.rng                # Loaded rngload object
+        data.rng.atomlist       # List of all atoms defined in rng file
+        data.rng.getatom("Si")  # Return all points in pos file matching Si's range
+
     """
     def __init__(self, pospath, rngpath):
         try:

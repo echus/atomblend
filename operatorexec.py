@@ -272,6 +272,7 @@ def bake(self, context):
         # Convert item to string name if needed
         namelist.append(str(item))
         # Get points (vertices) for current item and append
+        print("ITEMLIST ITEM TYPE", type(item), item)
         pointlist.append(getattr(data.rng, getfunc)(item))
 
     # Create group for meshes of same type
