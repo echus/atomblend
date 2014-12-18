@@ -15,7 +15,7 @@ import bpy
 import numpy as np
 import ntpath
 
-from .aptread import APTloader
+from .aptread import aptload
 from . import blend
 from . import analysis
 
@@ -236,9 +236,9 @@ def clear(self, context):
 
 def bake(self, context):
     """Draws currently selected pos file"""
-    props = context.scene.pos_panel_props
-    aptname = props.file_list        # Name of pos file to load
-    plot_type = props.plot_type # Atomic/Ionic/Isotopic
+    props     = context.scene.pos_panel_props
+    aptname   = props.file_list        # AP data ID (as in C.scene.aptdata dict)
+    plot_type = props.plot_type        # Atomic/Ionic/Isotopic
 
     if aptname:
         data = context.scene.aptdata[aptname]
@@ -248,8 +248,8 @@ def bake(self, context):
 
     if plot_type == 'ISO':
         groupname = aptname+" isotopic"
-        listfunc = "rnglist"
-        getfunc = "getrng"
+        listfunc = "rangelist"
+        getfunc = "getrange"
     elif plot_type == 'EA':
         groupname = aptname+" atomic"
         listfunc = "atomlist"
@@ -260,15 +260,15 @@ def bake(self, context):
         getfunc = "getion"
 
     # Populate item names and point locations
-    itemlist = getattr(data, listfunc)
+    itemlist = getattr(data.rng, listfunc)
 
     namelist = []
     pointlist = []
-    for ind, item in enumerate(itemlist):
-        # convert item to string name
+    for item in itemlist:
+        # Convert item to string name if needed
         namelist.append(str(item))
-        # get points (vertices) for current item and append
-        pointlist.append(getattr(data, getfunc)(ind))
+        # Get points (vertices) for current item and append
+        pointlist.append(getattr(data.rng, getfunc)(item))
 
     # Create group for meshes of same type
     grp = blend.space.group_add(groupname)
@@ -283,7 +283,7 @@ def bake(self, context):
         obj.atomind  = str(ind)
         blend.space.group_add_object(grp, obj)
 
-    # centre view on created group
+    # Centre view on created group
     blend.space.view_selected_group(groupname)
 
     self.report({'INFO'}, "Loaded %s data into %s group" % (aptname, groupname))
@@ -298,8 +298,8 @@ def load_posrng(self, context):
     rngpath = props.rng_filename
 
     try:
-        data = APTloader.ReadAPTData(pospath, rngpath)
-        print("Loaded rng data: ", data.atomlist)
+        data = aptload.APData(pospath, rngpath)
+        print("Loaded rng data: ", data.rng.atomlist)
         self.report({'INFO'}, "Loaded %s as POS, %s as RNG" % \
                 (props.pos_filename, props.rng_filename))
     except APTloader.APTReadError:
