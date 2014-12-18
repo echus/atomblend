@@ -15,7 +15,7 @@ import bpy
 import numpy as np
 import ntpath
 
-from .aptread import aptload
+from .apread import apload
 from . import blend
 from . import analysis
 
@@ -304,11 +304,11 @@ def load_posrng(self, context):
     rngpath = props.rng_filename
 
     try:
-        data = aptload.APData(pospath, rngpath)
+        data = apload.APData(pospath, rngpath)
         print("Loaded rng data: ", data.rng.atomlist)
         self.report({'INFO'}, "Loaded %s as POS, %s as RNG" % \
                 (props.pos_filename, props.rng_filename))
-    except aptload.APReadError:
+    except apload.APReadError:
         self.report({'ERROR'}, "Error reading pos or rng file. Double check file names.")
         return {'CANCELLED'}
 

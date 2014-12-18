@@ -1,5 +1,5 @@
 import numpy as np
-from aptread.aptload import APData
+from aptread.apload import APData
 
 pospath = "./data/R04.pos"
 rngpath = "./data/R04.rng"
