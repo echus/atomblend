@@ -170,7 +170,7 @@ class APData():
         """
 
         rnginds = self.ions[ionname]
-        return self.getrng(rngind, mc, xyz)
+        return self.getrng(rnginds, mc, xyz)
 
     def getatom(self, atomname, mc, xyz):
         """ Returns all points that match the selected atom.
@@ -179,4 +179,4 @@ class APData():
         atomind -- index of the atom in self.atomlist
         """
         rnginds = self.atoms[atomname]
-        return self.getrng(rngind, mc, xyz)
+        return self.getrng(rnginds, mc, xyz)
