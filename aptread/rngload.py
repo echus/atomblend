@@ -201,7 +201,7 @@ class ORNLRNG():
 
     # === POS point return functions ===
     # TODO find a cleaner way to vectorize this?
-    def getrng(self, rnginds):
+    def getrange(self, rnginds):
         """
         Returns all xyz points in the selected range reference(s).
 
@@ -225,7 +225,7 @@ class ORNLRNG():
             for ri in rnginds:
                 ind = np.logical_xor(ind, (self._posmap == ri))
         else:
-            raise InvalidRngError('APTloader.getrng input "rnginds" is not a valid int or list')
+            raise InvalidRngError('APTloader.getrange input "rnginds" is not a valid int or list')
             return None
 
         return xyz[ind]
