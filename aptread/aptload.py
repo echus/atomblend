@@ -14,7 +14,7 @@
 import numpy as np
 
 from . import POSloader as pl
-from . import ORNLRNGloader as rl
+from . import rngload as rl
 
 # === Helper functions ===
 def _unique_rows(a):
@@ -40,7 +40,7 @@ class APData():
             raise APTReadError('Error opening pos file %s' % pospath)
             return
         try:
-            self._rngfile = rl.ReadRng(rngpath)
+            self._rngfile = rl.ORNLRNG(rngpath)
         except rl.ReadError:
             raise APTReadError('Error opening rng file %s' % rngpath)
             return
