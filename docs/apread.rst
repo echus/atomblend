@@ -1,9 +1,10 @@
-=============================
-apread: AP data loader module
-=============================
+======
+apread
+======
+AP data loader module.
 
-apload.py
----------
+apload
+------
 apload.py contains the APData wrapper class for interacting with the 
 range/pos-loading classes defined in rngload/posload. APData handles
 initialising the range loading class to operate a specific pos object.
@@ -16,8 +17,8 @@ classes in rngload/posload.py.
 .. autoclass:: apread.apload.APData
    :members:
 
-posload.py
-----------
+posload
+-------
 The posload module contains all classes responsible for loading pos filetypes.
 New classes can be created to handle loading different pos file formats.
 
@@ -35,8 +36,8 @@ Available pos loaders
 .. autoclass:: apread.posload.POS
    :members: xyz, mc, _parsefile, __len__
 
-rngload.py
-----------
+rngload
+-------
 The rngload module containes all classes responsible for loading mass-to-charge
 range files. New classes can be created to handle loading different range file
 formats. 

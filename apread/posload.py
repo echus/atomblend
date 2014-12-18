@@ -16,8 +16,8 @@ import numpy as np
 class ReadError(Exception): pass
 
 class POSInterface():
-    xyz = [] #: n x 3 numpy array of xyz points in input posfile
-    mc  = [] #: n x 1 numpy array of mass-to-charge ratios corresponding to all points
+    xyz = None #: n x 3 numpy array of xyz points in input posfile
+    mc  = None #: n x 1 numpy array of mass-to-charge ratios corresponding to all points
 
     def __len__(self):
         """Number of points in pos file"""

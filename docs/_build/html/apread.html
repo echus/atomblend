@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>apread: AP data loader module &mdash; AtomBlend 1.0 documentation</title>
+    <title>apread &mdash; AtomBlend 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,7 +24,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="AtomBlend 1.0 documentation" href="index.html" />
-    <link rel="prev" title="Framework" href="framework.html" /> 
+    <link rel="up" title="Modules" href="modules.html" />
+    <link rel="next" title="blend" href="blend.html" />
+    <link rel="prev" title="Modules" href="modules.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,9 +36,13 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="framework.html" title="Framework"
+          <a href="blend.html" title="blend"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="Modules"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">AtomBlend</a> &raquo;</li> 
+        <li><a href="index.html">AtomBlend</a> &raquo;</li>
+          <li><a href="modules.html" accesskey="U">Modules</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -45,10 +51,11 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="apread-ap-data-loader-module">
-<h1>apread: AP data loader module<a class="headerlink" href="#apread-ap-data-loader-module" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="apload-py">
-<h2>apload.py<a class="headerlink" href="#apload-py" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="apread">
+<h1>apread<a class="headerlink" href="#apread" title="Permalink to this headline">¶</a></h1>
+<p>AP data loader module.</p>
+<div class="section" id="apload">
+<h2>apload<a class="headerlink" href="#apload" title="Permalink to this headline">¶</a></h2>
 <p>apload.py contains the APData wrapper class for interacting with the
 range/pos-loading classes defined in rngload/posload. APData handles
 initialising the range loading class to operate a specific pos object.</p>
@@ -75,8 +82,8 @@ classes in rngload/posload.py.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="posload-py">
-<h2>posload.py<a class="headerlink" href="#posload-py" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="posload">
+<h2>posload<a class="headerlink" href="#posload" title="Permalink to this headline">¶</a></h2>
 <p>The posload module contains all classes responsible for loading pos filetypes.
 New classes can be created to handle loading different pos file formats.</p>
 <div class="section" id="interface">
@@ -87,13 +94,13 @@ New classes can be created to handle loading different pos file formats.</p>
 <em class="property">class </em><tt class="descclassname">apread.posload.</tt><tt class="descname">POSInterface</tt><a class="headerlink" href="#apread.posload.POSInterface" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="attribute">
 <dt id="apread.posload.POSInterface.mc">
-<tt class="descname">mc</tt><em class="property"> = []</em><a class="headerlink" href="#apread.posload.POSInterface.mc" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mc</tt><em class="property"> = None</em><a class="headerlink" href="#apread.posload.POSInterface.mc" title="Permalink to this definition">¶</a></dt>
 <dd><p>n x 1 numpy array of mass-to-charge ratios corresponding to all points</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="apread.posload.POSInterface.xyz">
-<tt class="descname">xyz</tt><em class="property"> = []</em><a class="headerlink" href="#apread.posload.POSInterface.xyz" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">xyz</tt><em class="property"> = None</em><a class="headerlink" href="#apread.posload.POSInterface.xyz" title="Permalink to this definition">¶</a></dt>
 <dd><p>n x 3 numpy array of xyz points in input posfile</p>
 </dd></dl>
 
@@ -134,8 +141,8 @@ New classes can be created to handle loading different pos file formats.</p>
 
 </div>
 </div>
-<div class="section" id="rngload-py">
-<h2>rngload.py<a class="headerlink" href="#rngload-py" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rngload">
+<h2>rngload<a class="headerlink" href="#rngload" title="Permalink to this headline">¶</a></h2>
 <p>The rngload module containes all classes responsible for loading mass-to-charge
 range files. New classes can be created to handle loading different range file
 formats.</p>
@@ -286,14 +293,14 @@ below!</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">apread: AP data loader module</a><ul>
-<li><a class="reference internal" href="#apload-py">apload.py</a></li>
-<li><a class="reference internal" href="#posload-py">posload.py</a><ul>
+<li><a class="reference internal" href="#">apread</a><ul>
+<li><a class="reference internal" href="#apload">apload</a></li>
+<li><a class="reference internal" href="#posload">posload</a><ul>
 <li><a class="reference internal" href="#interface">Interface</a></li>
 <li><a class="reference internal" href="#available-pos-loaders">Available pos loaders</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#rngload-py">rngload.py</a><ul>
+<li><a class="reference internal" href="#rngload">rngload</a><ul>
 <li><a class="reference internal" href="#id1">Interface</a></li>
 <li><a class="reference internal" href="#available-range-loaders">Available range loaders</a></li>
 </ul>
@@ -303,8 +310,11 @@ below!</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="framework.html"
-                        title="previous chapter">Framework</a></p>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">Modules</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="blend.html"
+                        title="next chapter">blend</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/apread.txt"
@@ -334,9 +344,13 @@ below!</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="framework.html" title="Framework"
+          <a href="blend.html" title="blend"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="Modules"
              >previous</a> |</li>
-        <li><a href="index.html">AtomBlend</a> &raquo;</li> 
+        <li><a href="index.html">AtomBlend</a> &raquo;</li>
+          <li><a href="modules.html" >Modules</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

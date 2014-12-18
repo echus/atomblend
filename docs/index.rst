@@ -8,8 +8,7 @@ Contents:
    
    intro
    framework
-   apread
-
+   modules
 
 Indices and tables
 ==================
