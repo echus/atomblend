@@ -308,7 +308,7 @@ def load_posrng(self, context):
         print("Loaded rng data: ", data.rng.atomlist)
         self.report({'INFO'}, "Loaded %s as POS, %s as RNG" % \
                 (props.pos_filename, props.rng_filename))
-    except APTloader.APTReadError:
+    except aptload.APReadError:
         self.report({'ERROR'}, "Error reading pos or rng file. Double check file names.")
         return {'CANCELLED'}
 

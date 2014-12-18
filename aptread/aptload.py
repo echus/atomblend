@@ -17,7 +17,7 @@ from . import posload as pl
 from . import rngload as rl
 
 # === Exceptions ===
-class APTReadError(Exception): pass
+class APReadError(Exception): pass
 class InvalidRngError(Exception): pass
 class InvalidIndexError(Exception): pass
 
@@ -30,12 +30,12 @@ class APData():
         try:
             self.pos = pl.POS(pospath)
         except pl.ReadError:
-            raise APTReadError('Error opening pos file %s' % pospath)
+            raise APReadError('Error opening pos file %s' % pospath)
             return
         try:
             self.rng = rl.ORNLRNG(rngpath)
         except rl.ReadError:
-            raise APTReadError('Error opening rng file %s' % rngpath)
+            raise APReadError('Error opening rng file %s' % rngpath)
             return
 
         # Range all points in posfile
