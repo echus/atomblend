@@ -237,25 +237,29 @@ def clear(self, context):
 def bake(self, context):
     """Draws currently selected pos file"""
     props     = context.scene.pos_panel_props
-    aptname   = props.file_list        # AP data ID (as in C.scene.aptdata dict)
-    plot_type = props.plot_type        # Atomic/Ionic/Isotopic
 
-    if aptname:
-        data = context.scene.aptdata[aptname]
+    # Get user selections
+    apid      = props.apdata_list   # Selected AP data ID to load
+                                    # (as in C.scene.apdata dict)
+    plot_type = props.plot_type     # Selected plot type
+                                    # Atomic/Ionic/Isotopic
+
+    if apid:
+        data = context.scene.apdata[apid]
     else:
         self.report({'ERROR'}, "No files loaded yet")
         return {'CANCELLED'}
 
     if plot_type == 'ISO':
-        groupname = aptname+" isotopic"
+        groupname = apid+" isotopic"
         listfunc = "rangelist"
         getfunc = "getrange"
     elif plot_type == 'EA':
-        groupname = aptname+" atomic"
+        groupname = apid+" atomic"
         listfunc = "atomlist"
         getfunc = "getatom"
     elif plot_type == 'ION':
-        groupname = aptname+" ionic"
+        groupname = apid+" ionic"
         listfunc = "ionlist"
         getfunc = "getion"
 
@@ -276,22 +280,24 @@ def bake(self, context):
     # Draw all meshes in pointlist and link to group
     for ind, (name, verts) in enumerate(zip(namelist, pointlist)):
         obj = blend.object.object_add_from_verts(verts, name, trunc=None)
+
         obj.datatype = 'DATA'
-        obj.aptname  = aptname
-        obj.aptfunc  = getfunc
-        obj.atomname = name
-        obj.atomind  = str(ind)
+
+        obj.apid     = apid     # AP ID name used in C.scene.apdata dict
+        obj.apfunc   = getfunc  # AP function used to build dataset (eg "getion")
+        obj.apname   = name     # Name of imported atom/ion/range (eg "Si")
+
         blend.space.group_add_object(grp, obj)
 
     # Centre view on created group
     blend.space.view_selected_group(groupname)
 
-    self.report({'INFO'}, "Loaded %s data into %s group" % (aptname, groupname))
+    self.report({'INFO'}, "Loaded %s data into %s group" % (apid, groupname))
     return {'FINISHED'}
 
 def load_posrng(self, context):
     """
-    Load APT pos/rng data to aptdata scene variable
+    Load APT pos/rng data to apdata scene variable
     """
     props = context.scene.pos_panel_props
     pospath = props.pos_filename
@@ -306,7 +312,7 @@ def load_posrng(self, context):
         self.report({'ERROR'}, "Error reading pos or rng file. Double check file names.")
         return {'CANCELLED'}
 
-    # Add reference to scene.aptdata
+    # Add reference to scene.apdata
     dataname = ntpath.basename(props.pos_filename)
-    context.scene.aptdata[dataname] = data
+    context.scene.apdata[dataname] = data
     return {'FINISHED'}

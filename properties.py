@@ -20,8 +20,8 @@ from bpy.props import BoolProperty, StringProperty, EnumProperty, \
 DEFAULT_COLOR = (0, 0.144, 0.554)
 
 # === Global scene properties ===
-# Array for APTloader objects
-bpy.types.Scene.aptdata = {}
+# Dictionary for APData objects
+bpy.types.Scene.apdata = {}
 
 # === Custom AtomBlend object RNA properties ===
 # Define AtomBlend-specific RNA props for every object
@@ -38,10 +38,12 @@ bpy.types.Object.datatype = EnumProperty(
         )
 
 # Properties for associated APTloader information (only on datatype=DATA objs)
-bpy.types.Object.aptname  = StringProperty()
-bpy.types.Object.aptfunc  = StringProperty()
-bpy.types.Object.atomname = StringProperty()
-bpy.types.Object.atomind  = StringProperty()
+bpy.types.Object.apid    = StringProperty() # APData ID name reference to
+                                            # C.scene.apdata dict
+bpy.types.Object.apfunc  = StringProperty() # APData function used to build
+                                            # this dataset
+bpy.types.Object.apname  = StringProperty() # Human-readable name of imported
+                                            # data (eg "Si")
 
 # Type of visualisation applied
 vtypes = [('NONE',  "None",  "None"),
@@ -78,13 +80,13 @@ class VIEW3D_PT_pos_panel_props(PropertyGroup):
         )
 
     # Function to return enum list of loaded pos files from current context
-    def aptdata_enum(self, context):
+    def apdata_enum(self, context):
         items = []
-        for key in context.scene.aptdata:
+        for key in context.scene.apdata:
             items.append((key, key, key))
         return items
 
-    file_list = EnumProperty(name="File", items=aptdata_enum)
+    apdata_list = EnumProperty(name="File", items=apdata_enum)
 
     plot_options = [('EA',  "Atomic",   "Atomic"  ), \
                     ('ION', "Ionic",    "Ionic"   ), \
