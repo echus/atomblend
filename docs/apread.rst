@@ -1,7 +1,7 @@
 ======
 apread
 ======
-AP data loader module.
+AP data loader package.
 
 apload
 ------

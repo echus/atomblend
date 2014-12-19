@@ -8,7 +8,7 @@ Contents:
    
    intro
    framework
-   modules
+   packages
 
 Indices and tables
 ==================
