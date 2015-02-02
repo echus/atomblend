@@ -11,6 +11,9 @@
 # AtomBlend addon initialisation and UI definition
 # =============================================================================
 
+import sys
+sys.path.append("/home/user/Blender/2.72/scripts/addons/atomblend/docs")
+
 #__all__ = ['properties', 'operators', 'drawing']
 
 # === Addon info ===

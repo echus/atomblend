@@ -14,7 +14,7 @@ AtomBlend accesses all AP data through the APData class.
 In the future APData will handle loading multiple filetypes with the correct 
 classes in rngload/posload.py.
 
-.. autoclass:: apread.apload.APData
+.. autoclass:: atomblend.apread.apload.APData
    :members:
 
 posload
