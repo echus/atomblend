@@ -27,10 +27,10 @@ def analysis_isosurface_gen(self, context):
     # Get user specified isorange
     isorange = [props.analysis_isosurf_rangefrom, props.analysis_isosurf_rangeto]
     # FIXME don't load this again!!! save as global var for now?
-    data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
+    data = apload.APData(props.pos_filename, props.rng_filename)
 
     print("Calculating voxelisation")
-    voxarray = analysis.voxelisation.generate(data.xyz)
+    voxarray = analysis.voxelisation.generate(data.pos.xyz)
     print("Calculating isosurface for isorange", isorange)
     verts, faces = analysis.isosurface.generate(voxarray, isorange)
     print("Calculating isosurface done!")
@@ -46,8 +46,8 @@ def animation_add(self, context):
     # Get POS xyz data
     props = context.scene.pos_panel_props
     # FIXME don't load this again!!! save as global var for now?
-    data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
-    data_centre = np.average(data.xyz, axis=0)
+    data = apload.APData(props.pos_filename, props.rng_filename)
+    data_centre = np.average(data.pos.xyz, axis=0)
 
     # Set camera location and offset from dataset (user)
     cam_target = data_centre
@@ -93,9 +93,9 @@ def add_bounding_box(self, context):
     #padding = self.padding
 
     # FIXME don't load this again!!! save as global var for now?
-    data = APTloader.ReadAPTData(props.pos_filename, props.rng_filename)
+    data = apload.APData(props.pos_filename, props.rng_filename)
 
-    pointlist = data.xyz
+    pointlist = data.pos.xyz
     xyzmax = np.amax(pointlist, axis=0) # max locations in data
     xyzmin = np.amin(pointlist, axis=0) # min locations in data
 
