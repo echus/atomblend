@@ -1,5 +1,7 @@
 # AtomBlend #
 
+> :warning: This project is no longer being actively maintained and is currently only compatible wiith Blender 2.7.
+
 A Blender atom probe data visualisation and analysis addon.
 
 ### Setup ###
